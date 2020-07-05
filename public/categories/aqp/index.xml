@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>aqp on humus.rocks - soil is life on the rocks</title>
+    <link>/categories/aqp/</link>
+    <description>Recent content in aqp on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 30 Apr 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/aqp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mollic epipedon thickness requirement</title>
+      <link>/post/2020/04/30/mollic-epipedon-thickness-requirement/</link>
+      <pubDate>Thu, 30 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/30/mollic-epipedon-thickness-requirement/</guid>
+      <description>[This functionality has been live in aqp since version 1.21+]
+Here is a demonstration of some new functionality I am working on for evaluating taxonomic criteria with aqp.
+mollic.thickness.requirement calculates the minimum thickness of the materials meeting other requirements for a mollic epipedon, per criterion 6 in U.S. Soil Taxonomy (12th edition). I have used it for QC of pedon data, and also to assess questions about how frequently e.</description>
+    </item>
+    
+    <item>
+      <title>aqp 1.19 release and demos</title>
+      <link>/post/2020/01/27/aqp-1-19-release-and-demos/</link>
+      <pubDate>Mon, 27 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/01/27/aqp-1-19-release-and-demos/</guid>
+      <description>CRAN release: aqp (Algorithms for Quantitative Pedology) 1.19  Recent Changes CRAN release aqp 1.19 (2020-01-22)  new functions: hzDesgn(), get horizon designations from a SPC new functions: hzdesgnname()/hzdesgnname()&amp;lt;- and hztexclname()/hztexclname()&amp;lt;- get/set column containing horizon designations and texture classes better error/logic handling for glom()    Demonstrations aqp::glom() demo Here is a demonstration of checking cambic horizon texture criteria with glom() in SSURGO components from Yosemite National Park: - http://ncss-tech.</description>
+    </item>
+    
+    <item>
+      <title>loafercreek - aqp profileApply() tutorial</title>
+      <link>/post/2018/12/25/loafercreek-aqp-profileapply-tutorial/</link>
+      <pubDate>Tue, 25 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/12/25/loafercreek-aqp-profileapply-tutorial/</guid>
+      <description>This is a tutorial (worked examples and exercises) demonstrating use of the profileApply() function from the R package aqp.
+http://ncss-tech.github.io/AQP/demos/profileApply/loafercreek.html
+It loads a dataset, called loafercreek from the R package soilDB. The analysis is supported by the package sharpshootR. These packages are in large part developed by Dylan Beaudette, but there now are many contributors within NCSS.
+Loafercreek the dataset is a collection of mostly moderately deep Ultic Haploxeralfs on metavolcanic rock from the CA630 soil survey area (parts of Calaveras and Tuolumne Counties.</description>
+    </item>
+    
+  </channel>
+</rss>

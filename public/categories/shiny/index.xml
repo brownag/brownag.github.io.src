@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>shiny on humus.rocks - soil is life on the rocks</title>
+    <link>/categories/shiny/</link>
+    <description>Recent content in shiny on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 23 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/shiny/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Claves para la Taxonomía del Suelos</title>
+      <link>/post/2020/06/23/claves-para-la-taxonomia-kstlookup/</link>
+      <pubDate>Tue, 23 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/06/23/claves-para-la-taxonomia-kstlookup/</guid>
+      <description>Buscar Criterios de Taxón La Taxonomía del Suelo es un idioma utilizado en todo el mundo.
+Hice que mi algoritmo funcionara con las Claves españolas. ¡Echale un vistazo!
+https://brownag.shinyapps.io/KSTLookup</description>
+    </item>
+    
+    <item>
+      <title>US Soil Taxonomy Preceding Taxa App</title>
+      <link>/post/2020/06/13/soil-taxonomy-preceding-taxa-app/</link>
+      <pubDate>Sat, 13 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/06/13/soil-taxonomy-preceding-taxa-app/</guid>
+      <description>Continuing on my work with the underlying structure and logic of Soil Taxonomy, I have created another derivative of my text-mined database.
+https://brownag.shinyapps.io/KSTPreceding/
+This Shiny app shows all taxa that precede the specified taxon in the classification “sequence” specified by the Keys to Soil Taxonomy.
+This type of visualization is very relevant to the logic of the Keys, because in some ways, taxa are as much what they are, as what they are not.</description>
+    </item>
+    
+    <item>
+      <title>US Soil Taxonomy Taxon Criteria App</title>
+      <link>/post/2020/06/10/soil-taxonomy-taxon-criteria-app/</link>
+      <pubDate>Wed, 10 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/06/10/soil-taxonomy-taxon-criteria-app/</guid>
+      <description>Here is a basic Shiny app interface to a new database I developed from performing text mining analyses on the Keys to Soil Taxonomy (12th edition). This is alpha version of the “KSTLookup” Shiny app – a new tool for viewing criteria associated with taxa at the subgroup to order level in U.S. Soil Taxonomy.
+https://brownag.shinyapps.io/KSTLookup/
+Enter a taxon name such as “Spodosols”, “Aeric Endoaquepts”, “Glacistels” and see the tree of criteria – essentially a “pathway” leading to that specific taxon.</description>
+    </item>
+    
+  </channel>
+</rss>

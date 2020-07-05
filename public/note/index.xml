@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notes on humus.rocks - soil is life on the rocks</title>
+    <link>/note/</link>
+    <description>Recent content in Notes on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/note/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>A Quick Goodbye to Drupal</title>
+      <link>/note/2020/07/05/a-quick-goodbye-to-drupal/</link>
+      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/note/2020/07/05/a-quick-goodbye-to-drupal/</guid>
+      <description>O&amp;rsquo; Drupal, I will not be sad that I left ye&amp;rsquo; in the dust.</description>
+    </item>
+    
+  </channel>
+</rss>

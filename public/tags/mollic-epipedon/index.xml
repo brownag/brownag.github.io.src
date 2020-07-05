@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mollic epipedon on humus.rocks - soil is life on the rocks</title>
+    <link>/tags/mollic-epipedon/</link>
+    <description>Recent content in mollic epipedon on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 30 Apr 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/mollic-epipedon/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mollic epipedon thickness requirement</title>
+      <link>/post/2020/04/30/mollic-epipedon-thickness-requirement/</link>
+      <pubDate>Thu, 30 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/30/mollic-epipedon-thickness-requirement/</guid>
+      <description>[This functionality has been live in aqp since version 1.21+]
+Here is a demonstration of some new functionality I am working on for evaluating taxonomic criteria with aqp.
+mollic.thickness.requirement calculates the minimum thickness of the materials meeting other requirements for a mollic epipedon, per criterion 6 in U.S. Soil Taxonomy (12th edition). I have used it for QC of pedon data, and also to assess questions about how frequently e.</description>
+    </item>
+    
+  </channel>
+</rss>

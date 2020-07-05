@@ -1,0 +1,25 @@
+---
+title: First post using Hugo + blogdown
+author: Andrew G. Brown
+date: '2020-07-05'
+slug: first-post-using-hugo-blogdown
+categories:
+  - Hugo
+  - R
+  - Example
+tags:
+  - blogdown
+---
+
+## This is a header
+
+This is some regular text.
+
+```{r}
+# this is some R code (with syntax highlighting)
+for (i in 1:10) {
+  if (i %% 2 == 0) {
+    print(sprintf("this is a string %s", i))
+  }
+}
+```

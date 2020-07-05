@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/note/2020/07/05/a-quick-goodbye-to-drupal/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/blogdown/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/example/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/07/05/first-post-using-hugo-blogdown/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/hugo/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/note/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/api/</loc>
+    <lastmod>2020-07-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/cloud/</loc>
+    <lastmod>2020-07-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/digitalocean/</loc>
+    <lastmod>2020-07-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/nginx/</loc>
+    <lastmod>2020-07-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/plumber/</loc>
+    <lastmod>2020-07-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/07/04/r-in-the-cloud-api-for-soil-taxonomy-criteria/</loc>
+    <lastmod>2020-07-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/06/23/claves-para-la-taxonomia-kstlookup/</loc>
+    <lastmod>2020-06-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/shiny/</loc>
+    <lastmod>2020-06-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/soil-taxonomy/</loc>
+    <lastmod>2020-06-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/06/13/soil-taxonomy-preceding-taxa-app/</loc>
+    <lastmod>2020-06-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/06/10/soil-taxonomy-taxon-criteria-app/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/climate/</loc>
+    <lastmod>2020-06-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/demonstrations/</loc>
+    <lastmod>2020-06-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/groundwater/</loc>
+    <lastmod>2020-06-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/henry-mount/</loc>
+    <lastmod>2020-06-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/06/05/plot-henry-waterlevel-nearby-noaa-precip/</loc>
+    <lastmod>2020-06-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/soildb/</loc>
+    <lastmod>2020-06-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/aqp/</loc>
+    <lastmod>2020-04-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/mollic-epipedon/</loc>
+    <lastmod>2020-04-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/04/30/mollic-epipedon-thickness-requirement/</loc>
+    <lastmod>2020-04-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/01/28/soildb-2-5-back-on-cran/</loc>
+    <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2020/01/27/aqp-1-19-release-and-demos/</loc>
+    <lastmod>2020-01-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/loafercreek/</loc>
+    <lastmod>2018-12-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2018/12/25/loafercreek-aqp-profileapply-tutorial/</loc>
+    <lastmod>2018-12-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/</loc>
+  </url>
+  
+</urlset>

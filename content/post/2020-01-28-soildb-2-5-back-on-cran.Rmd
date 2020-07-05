@@ -1,0 +1,34 @@
+---
+title: soilDB 2.5 back on CRAN!
+author: Andrew G. Brown
+date: '2020-01-28'
+slug: soildb-2-5-back-on-cran
+categories:
+  - R
+  - soilDB
+tags: []
+---
+
+#### CRAN release: soilDB 2.5
+https://github.com/ncss-tech/soilDB
+
+This is a release of soilDB with new functionality and documentation, updates to conform with aqp 1.19, as well as bug-fixes and other quality-of-life enhancements.
+
+- https://github.com/ncss-tech/soilDB
+- https://cran.r-project.org/web/packages/soilDB/index.html
+- http://ncss-tech.github.io/soilDB/docs/
+
+Notably: we are back on CRAN. Tests and examples have been altered to minimize likelihood of failure on CRAN check farm machines, which has been an on-going issue. 
+
+By making tests that contact remote APIs skip if missing the `nasis_local` ODBC connection, we can effectively filter tests to run only on the local (work) machine.
+
+### Recent Changes 
+#### CRAN release soilDB 2.5 (2020-01-23)
+- `simplifyColorData` and `mix_and_clean_colors` always use CIELAB colorspace for weighted averages, and best-available metric for transformation to Munsell notation
+- `fetchSDA_spatial` - new fetch function that simplifies getting spatial data associated with a vector of `mukey` or `nationalmusym`. The function has options for customizing result attribute table and is designed to automatically use `makeChunks()` to prevent timeout on large queries.
+- `aqp::test_hz_logic` is now deprecated -- refactored affected `fetch` functions
+
+#### soilDB 2.4.3 (2020-01-07)
+- surface water depth added to `fetchNASIS_pedons`
+- `fetchNASIS` has @restrictions set automatically if data are populated
+- new function for accessing pedon RMF in local NASIS DB `get_RMF_from_NASIS_db`

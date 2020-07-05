@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>US Soil Taxonomy Taxon Criteria App | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">US Soil Taxonomy Taxon Criteria App</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/06/10</span></h3>
+<p class="terms">
+  
+  
+  Categories: 
+  <a href="/categories/r">R</a> 
+  <a href="/categories/shiny">shiny</a> 
+  
+  
+  
+  Tags: 
+  <a href="/tags/soil-taxonomy">soil taxonomy</a> 
+  
+  
+</p>
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Here is a basic Shiny app interface to a new database I developed from performing text mining analyses on the Keys to Soil Taxonomy (12th edition). This is alpha version of the “KSTLookup” Shiny app – a new tool for viewing criteria associated with taxa at the subgroup to order level in U.S. Soil Taxonomy.</p>
+<p><a href="https://brownag.shinyapps.io/KSTLookup/" class="uri">https://brownag.shinyapps.io/KSTLookup/</a></p>
+<p>Enter a taxon name such as “Spodosols”, “Aeric Endoaquepts”, “Glacistels” and see the tree of criteria – essentially a “pathway” leading to that specific taxon. The table includes chapter, page, and “clause” number references, as well as identification of relevant taxa/Keys.</p>
+<p>An experimental feature classifies the type of logic contained within the clause into one of several classes:</p>
+<ul>
+<li><em>FIRST</em> - first clause in a key</li>
+<li><em>AND</em> - this clause, AND the next clause</li>
+<li><em>OR</em> - this clause, OR the next clause</li>
+<li><em>END</em> - last clause in a sequence of clauses (that may be connected at multiple levels with AND/OR)</li>
+<li><em>NEW</em> - last clause in a higher order key – directs to another page</li>
+<li><em>LAST</em> - last clause in a key (only used for Subgroup level taxa)</li>
+</ul>
+<p>If you are interested in the method I used to pull this off, it involves running <em>pdftotext</em> on the official PDF copy of the Keys to Soil Taxonomy. A variety of regular expression patterns and indexing tricks are used to keep track of the relevant information, correct minor inconsistencies, and bring all text into consistent “clauses” that approximate individual evaluations that need to be made during the process of classifying a soil of interest.</p>
+<p>The tool only shows a subset of the criteria, and thus, does not stand “on its own” in its current form. This is intentional – and this tool should be considered a companion to the Keys – even though it is an exact derivative. None of the contents are altered, they are simply combined and classified.</p>
+<p>It is thought that this way of viewing criteria associated with particular Subgroup to Order level taxa will make it easier to traverse, and conceptualize, the structure of the Keys.</p>
+<p>Additional semantic logic will soon be added to link to glossary entries, diagnostic features and other properties and definitions of interest.</p>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+

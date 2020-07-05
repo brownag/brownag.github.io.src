@@ -1,0 +1,29 @@
+---
+title: aqp 1.19 release and demos
+author: Andrew G. Brown
+date: '2020-01-27'
+slug: aqp-1-19-release-and-demos
+categories:
+  - R
+  - aqp
+tags:
+  - demonstrations
+---
+#### CRAN release: aqp (Algorithms for Quantitative Pedology) 1.19
+
+### Recent Changes
+#### CRAN release aqp 1.19 (2020-01-22) 
+ - new functions: hzDesgn(), get horizon designations from a SPC
+ - new functions: hzdesgnname()/hzdesgnname()<- and hztexclname()/hztexclname()<- get/set column containing horizon designations and texture classes
+ - better error/logic handling for glom()
+ 
+### Demonstrations
+#### `aqp::glom()` demo
+Here is a demonstration of checking cambic horizon texture criteria with `glom()` in SSURGO components from Yosemite National Park:
+ - http://ncss-tech.github.io/AQP/demos/glom/glacierpoint.html
+
+#### `aqp::estimatePSCS()` demo
+Here is a demonstration of validating particle size control sections (populated in NASIS Taxonomic History Table) against calculated new algorithm `estimatePSCS()`.
+
+The demonstration is made with pedon data from Sequoia National Park associated with the Mineralking soil series:
+ - http://ncss-tech.github.io/AQP/demos/estimatePSCS/mineralKing.html

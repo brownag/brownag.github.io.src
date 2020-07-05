@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>loafercreek on humus.rocks - soil is life on the rocks</title>
+    <link>/tags/loafercreek/</link>
+    <description>Recent content in loafercreek on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 25 Dec 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/loafercreek/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>loafercreek - aqp profileApply() tutorial</title>
+      <link>/post/2018/12/25/loafercreek-aqp-profileapply-tutorial/</link>
+      <pubDate>Tue, 25 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/12/25/loafercreek-aqp-profileapply-tutorial/</guid>
+      <description>This is a tutorial (worked examples and exercises) demonstrating use of the profileApply() function from the R package aqp.
+http://ncss-tech.github.io/AQP/demos/profileApply/loafercreek.html
+It loads a dataset, called loafercreek from the R package soilDB. The analysis is supported by the package sharpshootR. These packages are in large part developed by Dylan Beaudette, but there now are many contributors within NCSS.
+Loafercreek the dataset is a collection of mostly moderately deep Ultic Haploxeralfs on metavolcanic rock from the CA630 soil survey area (parts of Calaveras and Tuolumne Counties.</description>
+    </item>
+    
+  </channel>
+</rss>

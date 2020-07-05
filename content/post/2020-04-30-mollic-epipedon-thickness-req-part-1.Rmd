@@ -1,0 +1,84 @@
+---
+title: Mollic epipedon thickness requirement
+author: Andrew G. Brown
+date: '2020-04-30'
+slug: mollic-epipedon-thickness-requirement
+categories:
+  - R
+  - aqp
+tags:
+  - soil taxonomy
+  - mollic epipedon
+--- 
+
+[This functionality has been live in _aqp_ since version 1.21+]
+
+Here is a demonstration of some new functionality I am working on for evaluating taxonomic criteria with _aqp_. 
+
+`mollic.thickness.requirement` calculates the minimum thickness of the materials meeting other requirements for a mollic epipedon, per criterion 6 in U.S. Soil Taxonomy (12th edition). I have used it for QC of pedon data, and also to assess questions about how frequently e.g. the sliding scale portion of the thickness requirement is invoked. 
+
+The thickness "requirement" is showing how thick the _thinnest possible mollic_ would have to be for each profile. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+library(aqp)
+library(soilDB)
+
+data("loafercreek")
+
+# subset loafercreek: profiles w/ _all_ horizons clay >20 and <35 
+#  these incidentally tend to not have as much of a clay increase 
+#  which affects their argillic horizon/PSCS depths
+foo <- mutate_profile(loafercreek, 
+                      in_range = all(na.omit(clay > 20 & clay < 35)) )
+s <- filter(foo, in_range)
+
+# make a plot
+par(mar=c(0,0,3,0))
+plotSPC(s, print.id = F, axis.line.offset = -3.5, max.depth = 100)
+
+# add legend + labels
+mtext("aqp calculated\n
+      Mollic/Umbric Minimum Thickness Requirement\n&
+      Particle Size Control Section Boundaries", 3)
+legend("bottomleft", c("particle size control section",
+                       "minimum mollic/umbric thickness",
+                       "absolute depth = 25cm"), lwd=c(3,3,1), 
+                       col=c("black","green","black"))
+
+# calculate PSCS boundaries and minimum mollic thickness
+s.diag <- profileApply(s, FUN = function(p) {
+  
+  # growing suite of aqp functions related to application of US soil taxonomic criteria
+  ep <- estimatePSCS(p)
+  mss <- getMineralSoilSurfaceDepth(p)
+  mt <- mollic.thickness.requirement(p)
+  
+  # construct result for frameify/merge into @diagnostic slot
+  df1 <- data.frame(feat="particle size control section", 
+                    top=ep[1], bot=ep[2])
+  df2 <- data.frame(feat="minimum mollic/umbric thickness", 
+                    top=mss, bot=mss+mt)
+  
+  df <- data.frame(id=profile_id(p), rbind(df1, df2))
+  colnames(df) <- c(idname(p), "featkind", "featdept","featdepb")
+  
+  return(df) 
+}, frameify=TRUE)
+
+# co-opting the @diagnostics slot and related plotting functionality
+#   these are diagnostic criteria/depths/control sections, rather than "features" per se
+diagnostic_hz(s) <- rbind(diagnostic_hz(s), s.diag)
+
+addDiagnosticBracket(s, kind = 'particle size control section', lwd=3)
+addDiagnosticBracket(s, kind = 'minimum mollic/umbric thickness', lwd=3, 
+                     offset=0, tick.length=0, col="green")
+abline(h=25)
+```
+
+On a semi-related note, along with these changes come improvements to the `hzdesgnname`/`hztexclname` usage as well as better, more consistent methods for guessing horizon attributes of interest to analyses like these (argillic, mollic, PSCS).
+
+There are many notes in the `mollic.thickness.requirement`comments about things that need to be expanded on pertaining to other diagnostic feature identification. 
+
+Currently, this relies on variants of a new set of aqp methods called `depthOf` and some very heavy handed assumptions about relationships between horizon designations and diagnostic features. However, these assumptions are clearly outlined, can be improved upon, and to some degree are necessary for application of taxonomic concepts to field data.
+
+I think this algorithm should work reasonably well with most complete (and not too unusual) pedon descriptions. I'd be interested in getting feedback or contrasting data sets (non-Xeralfs). Strongly contrasting particle sizes, gradual/diffuse boundaries, etc. would be interesting to evaluate.

@@ -1,0 +1,34 @@
+---
+title: US Soil Taxonomy Taxon Criteria App
+author: Andrew G. Brown
+date: '2020-06-10'
+slug: soil-taxonomy-taxon-criteria-app
+categories:
+  - R
+  - shiny
+tags:
+  - soil taxonomy
+---
+
+Here is a basic Shiny app interface to a new database I developed from performing text mining analyses on the Keys to Soil Taxonomy (12th edition). This is alpha version of the "KSTLookup" Shiny app -- a new tool for viewing criteria associated with taxa at the subgroup to order level in U.S. Soil Taxonomy.
+
+https://brownag.shinyapps.io/KSTLookup/
+
+Enter a taxon name such as "Spodosols", "Aeric Endoaquepts", "Glacistels" and see the tree of criteria -- essentially a "pathway" leading to that specific taxon. The table includes chapter, page, and "clause" number references, as well as identification of relevant taxa/Keys. 
+
+An experimental feature classifies the type of logic contained within the clause into one of several classes:
+
+- _FIRST_ - first clause in a key
+- _AND_ - this clause, AND the next clause
+- _OR_  - this clause, OR the next clause
+- _END_  - last clause in a sequence of clauses (that may be connected at multiple levels with AND/OR)
+- _NEW_  - last clause in a higher order key -- directs to another page
+- _LAST_ - last clause in a key (only used for Subgroup level taxa)
+
+If you are interested in the method I used to pull this off, it involves running <em>pdftotext</em> on the official PDF copy of the Keys to Soil Taxonomy. A variety of regular expression patterns and indexing tricks are used to keep track of the relevant information, correct minor inconsistencies, and bring all text into consistent "clauses" that approximate individual evaluations that need to be made during the process of classifying a soil of interest. 
+
+The tool only shows a subset of the criteria, and thus, does not stand "on its own" in its current form. This is intentional -- and this tool should be considered a companion to the Keys -- even though it is an exact derivative. None of the contents are altered, they are simply combined and classified.
+
+It is thought that this way of viewing criteria associated with particular Subgroup to Order level taxa will make it easier to traverse, and conceptualize, the structure of the Keys. 
+
+Additional semantic logic will soon be added to link to glossary entries, diagnostic features and other properties and definitions of interest.

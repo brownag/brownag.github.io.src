@@ -1,0 +1,45 @@
+---
+title: soilDB 2.5 back on CRAN!
+author: Andrew G. Brown
+date: '2020-01-28'
+slug: soildb-2-5-back-on-cran
+categories:
+  - R
+  - soilDB
+tags: []
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="cran-release-soildb-2.5" class="section level4">
+<h4>CRAN release: soilDB 2.5</h4>
+<p><a href="https://github.com/ncss-tech/soilDB" class="uri">https://github.com/ncss-tech/soilDB</a></p>
+<p>This is a release of soilDB with new functionality and documentation, updates to conform with aqp 1.19, as well as bug-fixes and other quality-of-life enhancements.</p>
+<ul>
+<li><a href="https://github.com/ncss-tech/soilDB" class="uri">https://github.com/ncss-tech/soilDB</a></li>
+<li><a href="https://cran.r-project.org/web/packages/soilDB/index.html" class="uri">https://cran.r-project.org/web/packages/soilDB/index.html</a></li>
+<li><a href="http://ncss-tech.github.io/soilDB/docs/" class="uri">http://ncss-tech.github.io/soilDB/docs/</a></li>
+</ul>
+<p>Notably: we are back on CRAN. Tests and examples have been altered to minimize likelihood of failure on CRAN check farm machines, which has been an on-going issue.</p>
+<p>By making tests that contact remote APIs skip if missing the <code>nasis_local</code> ODBC connection, we can effectively filter tests to run only on the local (work) machine.</p>
+</div>
+<div id="recent-changes" class="section level3">
+<h3>Recent Changes</h3>
+<div id="cran-release-soildb-2.5-2020-01-23" class="section level4">
+<h4>CRAN release soilDB 2.5 (2020-01-23)</h4>
+<ul>
+<li><code>simplifyColorData</code> and <code>mix_and_clean_colors</code> always use CIELAB colorspace for weighted averages, and best-available metric for transformation to Munsell notation</li>
+<li><code>fetchSDA_spatial</code> - new fetch function that simplifies getting spatial data associated with a vector of <code>mukey</code> or <code>nationalmusym</code>. The function has options for customizing result attribute table and is designed to automatically use <code>makeChunks()</code> to prevent timeout on large queries.</li>
+<li><code>aqp::test_hz_logic</code> is now deprecated – refactored affected <code>fetch</code> functions</li>
+</ul>
+</div>
+<div id="soildb-2.4.3-2020-01-07" class="section level4">
+<h4>soilDB 2.4.3 (2020-01-07)</h4>
+<ul>
+<li>surface water depth added to <code>fetchNASIS_pedons</code></li>
+<li><code>fetchNASIS</code> has <span class="citation">@restrictions</span> set automatically if data are populated</li>
+<li>new function for accessing pedon RMF in local NASIS DB <code>get_RMF_from_NASIS_db</code></li>
+</ul>
+</div>
+</div>

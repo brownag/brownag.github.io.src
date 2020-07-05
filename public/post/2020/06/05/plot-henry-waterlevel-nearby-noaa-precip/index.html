@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Plot Water Level &amp; NOAA Weather Data | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">Plot Water Level &amp; NOAA Weather Data</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/06/05</span></h3>
+<p class="terms">
+  
+  
+  Categories: 
+  <a href="/categories/r">R</a> 
+  <a href="/categories/soildb">soilDB</a> 
+  <a href="/categories/henry-mount">Henry Mount</a> 
+  
+  
+  
+  Tags: 
+  <a href="/tags/climate">climate</a> 
+  <a href="/tags/groundwater">groundwater</a> 
+  <a href="/tags/demonstrations">demonstrations</a> 
+  
+  
+</p>
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>This is a demonstration of how to plot water level data from the Henry Mount Soil Climate database with precipitation data from a nearby NOAA weather station.</p>
+<p>The demo uses two functions I recently added to the <em>soilDB</em> package (available on GitHub)</p>
+<ul>
+<li><p><code>get_NOAA_stations_nearXY</code>- find all stations near a specified latitude/longitude and bounding box (limit 1000)</p></li>
+<li><p><code>get_NOAA_GHCND</code> - get GHCND data (daily summaries) by station IDs, datatypes and years</p></li>
+</ul>
+<p>Note that using the NOAA API requires an API token specified as argument to above two functions.</p>
+<p>A token can be obtained for free at the following link: <a href="https://www.ncdc.noaa.gov/cdo-web/token" class="uri">https://www.ncdc.noaa.gov/cdo-web/token</a></p>
+<div id="demo-code-block-below-showing-both-precipitation-and-water-table-graphs" class="section level4">
+<h4>DEMO [code block below] showing both precipitation and water table graphs:</h4>
+<ul>
+<li><a href="https://github.com/ncss-tech/soilDB/blob/master/misc/noaa-henry.R" class="uri">https://github.com/ncss-tech/soilDB/blob/master/misc/noaa-henry.R</a></li>
+</ul>
+</div>
+<div id="demo-modified-large-rain-events-identified-on-water-table-graph" class="section level4">
+<h4>DEMO [modified] large rain events identified on water table graph:</h4>
+<ul>
+<li><a href="https://github.com/ncss-tech/soilDB/blob/master/misc/noaa-henry-bigevent.R" class="uri">https://github.com/ncss-tech/soilDB/blob/master/misc/noaa-henry-bigevent.R</a></li>
+</ul>
+<pre class="r"><code># Plot Henry waterlevel data with precipitation data from nearest NOAA weather station
+#
+# @purpose: Show use of two new experimental soilDB functions for the NOAA API. 
+#  You will need a recent version of soilDB off of GitHub to use this functionality.
+#
+#  - get_NOAA_stations_nearXY() - find all stations near a specified lat/lng and bounding box (limit 1000)
+#
+#  - get_NOAA_GHCND() - get GHCND data (daily summaries) by station ID(s), years(s) and datatypeid(s)
+#
+#  Note that using the NOAA API requires an API token specified as argument to above two functions.
+#  A token can be obtained for free at the following link: https://www.ncdc.noaa.gov/cdo-web/token
+#
+# @last_update: 2020/06/18
+#
+# @authors: Andrew Brown, Dylan Beaudette
+#
+##### SETUP #####
+
+# 1.  You will need your own API Token: https://www.ncdc.noaa.gov/cdo-web/token
+noaa_api_token &lt;- &quot;yourtokenhere&quot;
+
+# # 2. You will need a Henry project/siteid/sso + water level sensor name + type
+
+# this example is one of ben marshall&#39;s waterlevel sensors in Maryland
+henry_project &lt;- &quot;MD021&quot; # modify the fetchHenry call to use usersiteid, sso, etc.
+henry_sensor_name &lt;- &quot;Hatboro&quot;
+henry_sensor_type &lt;- &quot;waterlevel&quot;
+
+# this parameter is used to convert to UTM for distance calculation in meters
+utm_proj4 &lt;- &quot;+proj=utm +zone=18&quot; 
+use_metric &lt;- TRUE # distance/depth/rainfall in km/cm or mi/in?
+
+#################
+
+# data wrangling
+library(sp)
+library(dplyr)
+
+# API queries to HENRY and NOAA GHCND
+library(soilDB)
+
+# plots
+library(latticeExtra)
+
+# get data from henry 
+x &lt;- fetchHenry(
+    project = henry_project, 
+    what = &#39;all&#39;,
+    gran = &#39;day&#39;,
+    pad.missing.days = FALSE
+  )
+
+# subset potential multi-sensor result by sensor type (waterlevel) and sensor name
+x.sub &lt;- subset(x[[henry_sensor_type]], sensor_name == henry_sensor_name)
+
+# convert Henry date/time into Date class
+x.sub$date_time &lt;- as.Date(x.sub$date_time)
+
+# extract Henry coordinates using sensor/site name 
+henry_coords &lt;- data.frame(id = henry_sensor_name, 
+                           coordinates(x$sensors[x$sensors$name == henry_sensor_name, ]))
+
+# promote to SpatialPointsDataFrame
+coordinates(henry_coords) &lt;- ~ wgs84_longitude + wgs84_latitude
+proj4string(henry_coords) &lt;- &quot;+proj=longlat +datum=WGS84&quot;
+
+# download all the stations within a half-degree lat/lng of the henry coordinates
+#  using get_NOAA_stations_nearXY()
+stations &lt;- get_NOAA_stations_nearXY(
+    lat = henry_coords$wgs84_latitude,
+    lng = henry_coords$wgs84_longitude,
+    apitoken = noaa_api_token
+  )
+
+# remove stations with less than 90 percent data coverage
+# and make sure they have data at least more recent than 2010
+stations &lt;-  filter(stations,
+                    datacoverage &gt;= 0.90,
+                    stations$maxdate &gt; as.Date(&quot;2010-01-01&quot;))
+
+# promote point locations to SpatialPointsDataFrame
+stations.sp &lt;- stations[, c(&quot;id&quot;, &quot;longitude&quot;, &quot;latitude&quot;)]
+coordinates(stations.sp) &lt;- ~ longitude + latitude
+proj4string(stations.sp) &lt;- &quot;+proj=longlat +datum=WGS84&quot;
+
+stations.sp &lt;- spTransform(stations.sp, CRS(utm_proj4))
+henry_coords &lt;- spTransform(henry_coords, CRS(utm_proj4))
+
+# calculate spatial distance between all stations and the coordinates of Henry site
+dmat &lt;- sp::spDistsN1(stations.sp, henry_coords)
+stations$distance_km &lt;- dmat / 1000
+
+# determine the 10 nearest stations (could also set a distance threshold -- in degrees)
+idx.nearest &lt;- order(dmat)[1:10]
+noaa.stations &lt;- stations[idx.nearest, ]
+
+# create a date range based on the Henry data
+#   using the limits of the water level data and pad 14 days
+start.date &lt;- min(x.sub$date_time) - 14
+stop.date &lt;- max(x.sub$date_time) + 14
+
+# make date axis for graph
+date.axis &lt;- seq.Date(start.date, stop.date, by = &#39;2 months&#39;)
+
+# filter to get NOAA stations that have data [mindate, maxdate]
+#  within the HENRY interval [start.date, stop.date]
+noaa.stations.inrange &lt;- filter(noaa.stations, 
+                                mindate &lt;= start.date, 
+                                maxdate &gt;= stop.date)
+
+# the first row is the closest station with data coverage for full interval of Henry data
+noaa.station &lt;- noaa.stations.inrange[1, ]
+
+# determine what years to download precipitation data for
+#  based on the henry start and stop dates
+first.year &lt;- as.numeric(min(format(as.Date(date.axis), &quot;%Y&quot;)))
+last.year &lt;- as.numeric(max(format(as.Date(date.axis), &quot;%Y&quot;)))
+year.seq &lt;- as.character(first.year:last.year)
+
+# now, loop through each year and download the GHCND data (daily summaries)
+res &lt;- get_NOAA_GHCND(stations = noaa.station$id, years = year.seq, 
+                      datatypeid = &quot;PRCP&quot;, apitoken = noaa_api_token)
+
+# filter result to get JUST precipitation data
+res.precip &lt;- filter(res, datatype == &quot;PRCP&quot;)
+
+# convert 10ths of millimeters (integer storage of decimal) to centimeters
+res.precip$value &lt;- res.precip$value / 100
+
+ylabel1 &lt;- &#39;Water Level (cm)&#39;
+ylabel2 &lt;- &#39;Precipitation (cm)&#39;
+
+# if use_metric == FALSE, convert precip and water level from cm to inches
+if(!use_metric) {
+  res.precip$value &lt;- res.precip$value / 2.54
+  x.sub$sensor_value &lt;- x.sub$sensor_value / 2.54
+  
+  ylabel1 &lt;- &#39;Water Level (in)&#39;
+  ylabel2 &lt;- &#39;Precipitation (in)&#39;
+}
+
+# convert date to Date object for plotting
+res.precip$date &lt;- as.Date(res.precip$date)
+
+# plot water level data, save to object
+p.1 &lt;- xyplot(sensor_value ~ date_time,
+    data = x.sub,
+    type = c(&#39;l&#39;, &#39;g&#39;),
+    cex = 0.75,
+    ylab = ylabel1,
+    xlab = &#39;&#39;,
+    scales = list(
+      x = list(at = date.axis, format = &quot;%b\n%Y&quot;),
+      y = list(tick.number = 10)
+    )
+  )
+
+# plot precip data, save to object
+#  using date.axis, so even if the data are outside range, plot will line up
+p.2 &lt;- xyplot(value ~ date,
+              data = res.precip,
+              as.table = TRUE,
+              type = c(&#39;h&#39;),
+              strip = strip.custom(bg = grey(0.80)),
+              scales = list(x = list(at = date.axis, format = &quot;%b\n%Y&quot;)),
+              ylab = ylabel2)
+
+# combine plots into panels (latticeExtra feature)
+p.3 &lt;- c(p.1, p.2, layout = c(1, 2), x.same = TRUE)
+
+# calculate distance value to show
+distshow &lt;- ifelse(use_metric, 
+                         paste(round(noaa.station$distance_km, 1), &#39;km&#39;),
+                         paste(round(noaa.station$distance_km / 1.609, 1), &#39;mi&#39;))
+
+# make combined plot
+update(p.3,
+  scales = list(alternating = 3, y = list(rot = 0)),
+  ylab = c(ylabel1, ylabel2),
+  main = sprintf(&#39;Water Level (HENRY: %s)\nPrecipitation (NOAA: %s)\nDistance: %s&#39;,
+                henry_sensor_name, noaa.station$name, distshow),
+  xlim = c(start.date, stop.date),
+  panel = function(...) {
+    panel.xyplot(...)
+    panel.abline(v = date.axis, col = &#39;grey&#39;, lty = 3)
+    panel.grid(h = -1,
+               v = 0,
+               col = &#39;grey&#39;,
+               lty = 3)
+  }
+)</code></pre>
+<p><code>lattice</code> graph code is from fetchHenry/fetchSCAN “Water Level and Precipitation” demo by Dylan E. Beaudette (<a href="http://ncss-tech.github.io/AQP/soilDB/Henry-demo.html" class="uri">http://ncss-tech.github.io/AQP/soilDB/Henry-demo.html</a>).</p>
+<p>The basic concept was expanded here to make use of the much more extensive NOAA data.</p>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+

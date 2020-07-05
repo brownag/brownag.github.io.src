@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>demonstrations on humus.rocks - soil is life on the rocks</title>
+    <link>/tags/demonstrations/</link>
+    <description>Recent content in demonstrations on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 05 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/demonstrations/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Plot Water Level &amp; NOAA Weather Data</title>
+      <link>/post/2020/06/05/plot-henry-waterlevel-nearby-noaa-precip/</link>
+      <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/06/05/plot-henry-waterlevel-nearby-noaa-precip/</guid>
+      <description>This is a demonstration of how to plot water level data from the Henry Mount Soil Climate database with precipitation data from a nearby NOAA weather station.
+The demo uses two functions I recently added to the soilDB package (available on GitHub)
+ get_NOAA_stations_nearXY- find all stations near a specified latitude/longitude and bounding box (limit 1000)
+ get_NOAA_GHCND - get GHCND data (daily summaries) by station IDs, datatypes and years</description>
+    </item>
+    
+    <item>
+      <title>aqp 1.19 release and demos</title>
+      <link>/post/2020/01/27/aqp-1-19-release-and-demos/</link>
+      <pubDate>Mon, 27 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/01/27/aqp-1-19-release-and-demos/</guid>
+      <description>CRAN release: aqp (Algorithms for Quantitative Pedology) 1.19  Recent Changes CRAN release aqp 1.19 (2020-01-22)  new functions: hzDesgn(), get horizon designations from a SPC new functions: hzdesgnname()/hzdesgnname()&amp;lt;- and hztexclname()/hztexclname()&amp;lt;- get/set column containing horizon designations and texture classes better error/logic handling for glom()    Demonstrations aqp::glom() demo Here is a demonstration of checking cambic horizon texture criteria with glom() in SSURGO components from Yosemite National Park: - http://ncss-tech.</description>
+    </item>
+    
+  </channel>
+</rss>

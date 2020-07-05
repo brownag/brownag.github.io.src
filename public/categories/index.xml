@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on humus.rocks - soil is life on the rocks</title>
+    <link>/categories/</link>
+    <description>Recent content in Categories on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Example</title>
+      <link>/categories/example/</link>
+      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/example/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hugo</title>
+      <link>/categories/hugo/</link>
+      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>/categories/r/</link>
+      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cloud</title>
+      <link>/categories/cloud/</link>
+      <pubDate>Sat, 04 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/cloud/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nginx</title>
+      <link>/categories/nginx/</link>
+      <pubDate>Sat, 04 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/nginx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>plumber</title>
+      <link>/categories/plumber/</link>
+      <pubDate>Sat, 04 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/plumber/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shiny</title>
+      <link>/categories/shiny/</link>
+      <pubDate>Tue, 23 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/shiny/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Henry Mount</title>
+      <link>/categories/henry-mount/</link>
+      <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/henry-mount/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>soilDB</title>
+      <link>/categories/soildb/</link>
+      <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/soildb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>aqp</title>
+      <link>/categories/aqp/</link>
+      <pubDate>Thu, 30 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/aqp/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

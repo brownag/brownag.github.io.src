@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>climate on humus.rocks - soil is life on the rocks</title>
+    <link>/tags/climate/</link>
+    <description>Recent content in climate on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 05 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/climate/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Plot Water Level &amp; NOAA Weather Data</title>
+      <link>/post/2020/06/05/plot-henry-waterlevel-nearby-noaa-precip/</link>
+      <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/06/05/plot-henry-waterlevel-nearby-noaa-precip/</guid>
+      <description>This is a demonstration of how to plot water level data from the Henry Mount Soil Climate database with precipitation data from a nearby NOAA weather station.
+The demo uses two functions I recently added to the soilDB package (available on GitHub)
+ get_NOAA_stations_nearXY- find all stations near a specified latitude/longitude and bounding box (limit 1000)
+ get_NOAA_GHCND - get GHCND data (daily summaries) by station IDs, datatypes and years</description>
+    </item>
+    
+  </channel>
+</rss>

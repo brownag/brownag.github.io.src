@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mollic epipedon thickness requirement | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">Mollic epipedon thickness requirement</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/04/30</span></h3>
+<p class="terms">
+  
+  
+  Categories: 
+  <a href="/categories/r">R</a> 
+  <a href="/categories/aqp">aqp</a> 
+  
+  
+  
+  Tags: 
+  <a href="/tags/soil-taxonomy">soil taxonomy</a> 
+  <a href="/tags/mollic-epipedon">mollic epipedon</a> 
+  
+  
+</p>
+</div>
+
+<main>
+ 
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>[This functionality has been live in <em>aqp</em> since version 1.21+]</p>
+<p>Here is a demonstration of some new functionality I am working on for evaluating taxonomic criteria with <em>aqp</em>.</p>
+<p><code>mollic.thickness.requirement</code> calculates the minimum thickness of the materials meeting other requirements for a mollic epipedon, per criterion 6 in U.S. Soil Taxonomy (12th edition). I have used it for QC of pedon data, and also to assess questions about how frequently e.g. the sliding scale portion of the thickness requirement is invoked.</p>
+<p>The thickness “requirement” is showing how thick the <em>thinnest possible mollic</em> would have to be for each profile.</p>
+<p><img src="/post/2020-04-30-mollic-epipedon-thickness-req-part-1_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>On a semi-related note, along with these changes come improvements to the <code>hzdesgnname</code>/<code>hztexclname</code> usage as well as better, more consistent methods for guessing horizon attributes of interest to analyses like these (argillic, mollic, PSCS).</p>
+<p>There are many notes in the <code>mollic.thickness.requirement</code>comments about things that need to be expanded on pertaining to other diagnostic feature identification.</p>
+<p>Currently, this relies on variants of a new set of aqp methods called <code>depthOf</code> and some very heavy handed assumptions about relationships between horizon designations and diagnostic features. However, these assumptions are clearly outlined, can be improved upon, and to some degree are necessary for application of taxonomic concepts to field data.</p>
+<p>I think this algorithm should work reasonably well with most complete (and not too unusual) pedon descriptions. I’d be interested in getting feedback or contrasting data sets (non-Xeralfs). Strongly contrasting particle sizes, gradual/diffuse boundaries, etc. would be interesting to evaluate.</p>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+

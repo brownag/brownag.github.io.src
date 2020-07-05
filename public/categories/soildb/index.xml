@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>soilDB on humus.rocks - soil is life on the rocks</title>
+    <link>/categories/soildb/</link>
+    <description>Recent content in soilDB on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 05 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/soildb/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Plot Water Level &amp; NOAA Weather Data</title>
+      <link>/post/2020/06/05/plot-henry-waterlevel-nearby-noaa-precip/</link>
+      <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/06/05/plot-henry-waterlevel-nearby-noaa-precip/</guid>
+      <description>This is a demonstration of how to plot water level data from the Henry Mount Soil Climate database with precipitation data from a nearby NOAA weather station.
+The demo uses two functions I recently added to the soilDB package (available on GitHub)
+ get_NOAA_stations_nearXY- find all stations near a specified latitude/longitude and bounding box (limit 1000)
+ get_NOAA_GHCND - get GHCND data (daily summaries) by station IDs, datatypes and years</description>
+    </item>
+    
+    <item>
+      <title>soilDB 2.5 back on CRAN!</title>
+      <link>/post/2020/01/28/soildb-2-5-back-on-cran/</link>
+      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/01/28/soildb-2-5-back-on-cran/</guid>
+      <description>CRAN release: soilDB 2.5 https://github.com/ncss-tech/soilDB
+This is a release of soilDB with new functionality and documentation, updates to conform with aqp 1.19, as well as bug-fixes and other quality-of-life enhancements.
+ https://github.com/ncss-tech/soilDB https://cran.r-project.org/web/packages/soilDB/index.html http://ncss-tech.github.io/soilDB/docs/  Notably: we are back on CRAN. Tests and examples have been altered to minimize likelihood of failure on CRAN check farm machines, which has been an on-going issue.
+By making tests that contact remote APIs skip if missing the nasis_local ODBC connection, we can effectively filter tests to run only on the local (work) machine.</description>
+    </item>
+    
+  </channel>
+</rss>

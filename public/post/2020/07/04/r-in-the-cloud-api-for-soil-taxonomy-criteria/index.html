@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R-in-the-cloud API for Soil Taxonomy Criteria! | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">R-in-the-cloud API for Soil Taxonomy Criteria!</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/07/04</span></h3>
+<p class="terms">
+  
+  
+  Categories: 
+  <a href="/categories/r">R</a> 
+  <a href="/categories/plumber">plumber</a> 
+  <a href="/categories/nginx">nginx</a> 
+  <a href="/categories/cloud">cloud</a> 
+  
+  
+  
+  Tags: 
+  <a href="/tags/api">API</a> 
+  <a href="/tags/digitalocean">DigitalOcean</a> 
+  
+  
+</p>
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>For the <a href="https://brownag.shinyapps.io/KSTLookup">KSTLookup Shiny App</a> I am providing “taxon criteria trees” via an R-based API hosted “in the cloud.”</p>
+<div class="figure">
+<img src="/images/hedonisticlogic.png" alt="" />
+<p class="caption">DigitalOcean provides real-time tracking of various attributes of your “droplets” – here is “HedonisticLogic” my droplet that runs KSTLookup</p>
+</div>
+<ul>
+<li><p>The R API was developed using <em>plumber</em> (<a href="https://www.rplumber.io/" class="uri">https://www.rplumber.io/</a>)</p></li>
+<li><p>The service is run “in the cloud” on a “droplet” [Ubuntu 20.04 / R 4.0.2] (<a href="https://www.digitalocean.com/" class="uri">https://www.digitalocean.com/</a>)</p></li>
+<li><p>HTTP GET provides easy access to the API endpoint: _<a href="http://138.68.55.88/kstl_" class="uri">http://138.68.55.88/kstl_</a></p></li>
+</ul>
+<p>This initial version of the endpoint requires that code [denoting order in Key logic] and language [EN or SP] be specified, as in this example:</p>
+<p><code>http://138.68.55.88/kstl?code=ABCD&amp;language=SP</code></p>
+<p>Which returns the following JSON result:</p>
+<pre><code>{&quot;ABCD&quot;:[{&quot;content&quot;:&quot;&lt;b&gt;&lt;u&gt;A.&lt;\/u&gt;&lt;\/b&gt; Suelos que tienen:&quot;,&quot;chapter&quot;:4,&quot;page&quot;:42,&quot;key&quot;:&quot;Órdenes de Suelo&quot;,&quot;taxa&quot;:&quot;*&quot;,&quot;crit&quot;:&quot;A&quot;,&quot;clause&quot;:1,&quot;logic&quot;:&quot;PRIMERA&quot;},{&quot;content&quot;:&quot;&amp;nbsp;&lt;b&gt;1.&lt;\/b&gt; Permafrost dentro de 100 cm de la superficie del suelo&lt;i&gt;; o&lt;\/i&gt;&quot;,&quot;chapter&quot;:4,&quot;page&quot;:42,&quot;key&quot;:&quot;Órdenes de Suelo&quot;,&quot;taxa&quot;:&quot;*&quot;,&quot;crit&quot;:&quot;A&quot;,&quot;clause&quot;:2,&quot;logic&quot;:&quot;O&quot;},{&quot;content&quot;:&quot;&amp;nbsp;&lt;b&gt;2.&lt;\/b&gt; Materiales gélicos dentro de los 100 cm de la superficie del suelo y permafrost dentro de los 200 cm de la superficie del suelo.&quot;,&quot;chapter&quot;:4,&quot;page&quot;:42,&quot;key&quot;:&quot;Órdenes de Suelo&quot;,&quot;taxa&quot;:&quot;*&quot;,&quot;crit&quot;:&quot;A&quot;,&quot;clause&quot;:3,&quot;logic&quot;:&quot;FIN&quot;},{&quot;content&quot;:&quot;Gelisols, pág. 175&quot;,&quot;chapter&quot;:4,&quot;page&quot;:42,&quot;key&quot;:&quot;Órdenes de Suelo&quot;,&quot;taxa&quot;:&quot;*&quot;,&quot;crit&quot;:&quot;A&quot;,&quot;clause&quot;:4,&quot;logic&quot;:&quot;NUEVA&quot;},{&quot;content&quot;:&quot;&lt;b&gt;&lt;u&gt;AB.&lt;\/u&gt;&lt;\/b&gt; Otros Gelisols que tienen uno o más horizontes que muestran crioturbación en forma de límites de horizontes irregulares, quebradizos o distorsionados, como involuciones, acumulación de materia orgánica sobre la parte superior de un permafrost, cuñas de hielo o arena y como fragmentos de roca orientados.&quot;,&quot;chapter&quot;:9,&quot;page&quot;:175,&quot;key&quot;:&quot;Subórdenes&quot;,&quot;taxa&quot;:&quot;Gelisols&quot;,&quot;crit&quot;:&quot;AB&quot;,&quot;clause&quot;:5,&quot;logic&quot;:&quot;FIN&quot;},{&quot;content&quot;:&quot;Turbels, pág. 181&quot;,&quot;chapter&quot;:9,&quot;page&quot;:175,&quot;key&quot;:&quot;Subórdenes&quot;,&quot;taxa&quot;:&quot;Gelisols&quot;,&quot;crit&quot;:&quot;AB&quot;,&quot;clause&quot;:6,&quot;logic&quot;:&quot;NUEVA&quot;},{&quot;content&quot;:&quot;&lt;b&gt;&lt;u&gt;ABC.&lt;\/u&gt;&lt;\/b&gt; Otros Turbels que tienen condiciones anhídridas.&quot;,&quot;chapter&quot;:9,&quot;page&quot;:181,&quot;key&quot;:&quot;Grandes Grupos&quot;,&quot;taxa&quot;:&quot;Turbels&quot;,&quot;crit&quot;:&quot;ABC&quot;,&quot;clause&quot;:7,&quot;logic&quot;:&quot;FIN&quot;},{&quot;content&quot;:&quot;Anhyturbels, pág. 182&quot;,&quot;chapter&quot;:9,&quot;page&quot;:181,&quot;key&quot;:&quot;Grandes Grupos&quot;,&quot;taxa&quot;:&quot;Turbels&quot;,&quot;crit&quot;:&quot;ABC&quot;,&quot;clause&quot;:8,&quot;logic&quot;:&quot;NUEVA&quot;},{&quot;content&quot;:&quot;&lt;b&gt;&lt;u&gt;ABCD.&lt;\/u&gt;&lt;\/b&gt; Otros Anhyturbels que tienen un horizonte gypsico dentro de los 100 cm de la superficie del suelo mineral.&quot;,&quot;chapter&quot;:9,&quot;page&quot;:182,&quot;key&quot;:&quot;Subgrupos&quot;,&quot;taxa&quot;:&quot;Anhyturbels&quot;,&quot;crit&quot;:&quot;ABCD&quot;,&quot;clause&quot;:9,&quot;logic&quot;:&quot;FIN&quot;},{&quot;content&quot;:&quot;&lt;i&gt;Gypsic Anhyturbels&lt;\/i&gt;&quot;,&quot;chapter&quot;:9,&quot;page&quot;:182,&quot;key&quot;:&quot;Subgrupos&quot;,&quot;taxa&quot;:&quot;Anhyturbels&quot;,&quot;crit&quot;:&quot;ABCD&quot;,&quot;clause&quot;:10,&quot;logic&quot;:&quot;ULTIMA&quot;}]}</code></pre>
+<p><code>gzip</code> compression and collapsing clauses into “columns” to reduce reuse of identical names could make these results significantly smaller.</p>
+<p>For now, the structure with the “clause” as the fundamental taxonomic logical “unit” will be retained but rpresentation will likely be altered as the functionality of the database becomes more robust.</p>
+<p>Setting up a <em>plumber</em> API is really simple on your local machine.
+RStudio provides templates and examples that can be created via <strong>File &gt;&gt; New File &gt;&gt; Plumber API…</strong>.</p>
+<p>The gist is that <em>plumber</em> API endpoints are R functions with special markup: <code>#*</code>(similar to <em>Roxygen</em>).</p>
+<pre class="r"><code>#* Get criteria by taxon code and language
+#* @param code Taxon code to query
+#* @param language Language database to use
+#* @get /kstl
+function(code, language) {
+   # ... API logic goes here ...
+}</code></pre>
+<p>RStudio also provides hosting for <em>plumber</em> API services via RStudio Connect. For my API, I used DigitalOcean [which, like RStudio Connect, is a paid service] that is integrated with R via the <em>plumber</em> and <em>analogsea</em> packages. For individuals who are semi-experienced with Linux servers the flexibility and low cost of DigitalOcean makes it quite attractive. If all you need is a plumber API, however, RSC may be easier.</p>
+<p>Currently DigitalOcean is offering a promotion where if you set up your account they will give you a $100 credit that you can use over a two month period. At the rate that I have been using my credit funds, it is unlikely I will use all of mine in time! I will likely try out some more costly features just to make use of it. Spinning up a Droplet at the lowest tier (what I am using) has a monthly cost of $5 – higher levels of performance and additional features incur greater costs.</p>
+<p>This API update comes along with some other improvements to the Soil Taxonomy Shiny Apps and criteria database. See what I have been up to on GitHub: <a href="https://github.com/brownag/ncss-standards/tree/master/KST" class="uri">https://github.com/brownag/ncss-standards/tree/master/KST</a></p>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+

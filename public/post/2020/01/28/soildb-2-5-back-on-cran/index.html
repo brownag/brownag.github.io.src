@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>soilDB 2.5 back on CRAN! | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">soilDB 2.5 back on CRAN!</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/01/28</span></h3>
+<p class="terms">
+  
+  
+  Categories: 
+  <a href="/categories/r">R</a> 
+  <a href="/categories/soildb">soilDB</a> 
+  
+  
+  
+  
+</p>
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="cran-release-soildb-2.5" class="section level4">
+<h4>CRAN release: soilDB 2.5</h4>
+<p><a href="https://github.com/ncss-tech/soilDB" class="uri">https://github.com/ncss-tech/soilDB</a></p>
+<p>This is a release of soilDB with new functionality and documentation, updates to conform with aqp 1.19, as well as bug-fixes and other quality-of-life enhancements.</p>
+<ul>
+<li><a href="https://github.com/ncss-tech/soilDB" class="uri">https://github.com/ncss-tech/soilDB</a></li>
+<li><a href="https://cran.r-project.org/web/packages/soilDB/index.html" class="uri">https://cran.r-project.org/web/packages/soilDB/index.html</a></li>
+<li><a href="http://ncss-tech.github.io/soilDB/docs/" class="uri">http://ncss-tech.github.io/soilDB/docs/</a></li>
+</ul>
+<p>Notably: we are back on CRAN. Tests and examples have been altered to minimize likelihood of failure on CRAN check farm machines, which has been an on-going issue.</p>
+<p>By making tests that contact remote APIs skip if missing the <code>nasis_local</code> ODBC connection, we can effectively filter tests to run only on the local (work) machine.</p>
+</div>
+<div id="recent-changes" class="section level3">
+<h3>Recent Changes</h3>
+<div id="cran-release-soildb-2.5-2020-01-23" class="section level4">
+<h4>CRAN release soilDB 2.5 (2020-01-23)</h4>
+<ul>
+<li><code>simplifyColorData</code> and <code>mix_and_clean_colors</code> always use CIELAB colorspace for weighted averages, and best-available metric for transformation to Munsell notation</li>
+<li><code>fetchSDA_spatial</code> - new fetch function that simplifies getting spatial data associated with a vector of <code>mukey</code> or <code>nationalmusym</code>. The function has options for customizing result attribute table and is designed to automatically use <code>makeChunks()</code> to prevent timeout on large queries.</li>
+<li><code>aqp::test_hz_logic</code> is now deprecated – refactored affected <code>fetch</code> functions</li>
+</ul>
+</div>
+<div id="soildb-2.4.3-2020-01-07" class="section level4">
+<h4>soilDB 2.4.3 (2020-01-07)</h4>
+<ul>
+<li>surface water depth added to <code>fetchNASIS_pedons</code></li>
+<li><code>fetchNASIS</code> has <span class="citation">@restrictions</span> set automatically if data are populated</li>
+<li>new function for accessing pedon RMF in local NASIS DB <code>get_RMF_from_NASIS_db</code></li>
+</ul>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+
