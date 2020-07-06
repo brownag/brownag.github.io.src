@@ -1,5 +1,5 @@
 language: r
-dist: focal
+dist: xenial
 latex: false
 
 branches:
@@ -8,6 +8,7 @@ branches:
 
 cache:
   packages: yes
+
 directories:
   - $HOME/bin
 
@@ -20,12 +21,8 @@ script:
 - Rscript -e 'blogdown::build_site()'
 
 deploy:
-  provider: pages
-
-skip_cleanup: true
-github_token: $GITHUB_TOKEN
-on:
-  branch: master
+provider: pages
 local_dir: public
+github_token: $GITHUB_TOKEN
 repo: brownag/brownag.github.io
 target_branch: master
