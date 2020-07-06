@@ -21,8 +21,14 @@ script:
 - Rscript -e 'blogdown::build_site()'
 
 deploy:
-provider: pages
-local_dir: public
-github_token: $GITHUB_TOKEN
-repo: brownag/brownag.github.io
-target_branch: master
+  provider: pages
+  skip_cleanup: TRUE
+  github_token: $GITHUB_TOKEN
+  keep_history: TRUE
+  on:
+    branch: master
+  local_dir: public
+  repo: brownag/brownag.github.io
+  target_branch: master
+  verbose: TRUE
+  deployment_file: TRUE
