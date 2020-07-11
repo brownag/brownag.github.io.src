@@ -6,10 +6,20 @@
     <description>Recent content in aqp on humus.rocks - soil is life on the rocks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 13 Jul 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/aqp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Estimations of Soil Depth with aqp</title>
+      <link>/post/2020/07/13/estimations-with-algorithms-for-quantitative-pedology/</link>
+      <pubDate>Mon, 13 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/07/13/estimations-with-algorithms-for-quantitative-pedology/</guid>
+      <description>Estimation of soil depth in aqp R package Estimation functions for soils try to calculate unknown properties based on existing observations and known relationships. The term pedotransfer function was coined by Johan Bouma as “translating data we have into what we need.” Soil surveys, and especially the primary descriptions collected by field soil scientists, offer many opportunities for leveraging this type of information.
+In Algorithms for Quantitative Pedology aqp, the heuristics are defined in terms of R code.</description>
+    </item>
     
     <item>
       <title>Mollic epipedon thickness requirement</title>
@@ -39,7 +49,8 @@ mollic.thickness.requirement calculates the minimum thickness of the materials m
       <guid>/post/2018/12/25/loafercreek-aqp-profileapply-tutorial/</guid>
       <description>This is a tutorial (worked examples and exercises) demonstrating use of the profileApply() function from the R package aqp.
 http://ncss-tech.github.io/AQP/demos/profileApply/loafercreek.html
-It loads a dataset, called loafercreek from the R package soilDB. The analysis is supported by the package sharpshootR. These packages are in large part developed by Dylan Beaudette, but there now are many contributors within NCSS.
+It loads a dataset, called loafercreek from the R package soilDB.
+The analysis is supported by the package sharpshootR. These packages are in large part developed by Dylan Beaudette, but there now are many contributors within NCSS.
 Loafercreek the dataset is a collection of mostly moderately deep Ultic Haploxeralfs on metavolcanic rock from the CA630 soil survey area (parts of Calaveras and Tuolumne Counties.</description>
     </item>
     

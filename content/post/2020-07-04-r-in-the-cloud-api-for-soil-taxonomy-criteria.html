@@ -23,7 +23,7 @@ tags:
 </div>
 <ul>
 <li><p>The R API was developed using <em>plumber</em> (<a href="https://www.rplumber.io/" class="uri">https://www.rplumber.io/</a>)</p></li>
-<li><p>The service is run “in the cloud” on a “droplet” [Ubuntu 20.04 / R 4.0.2] (<a href="https://www.digitalocean.com/" class="uri">https://www.digitalocean.com/</a>)</p></li>
+<li><p>The service is run “in the cloud” on a “droplet” [Ubuntu 20.04 / <strong>R</strong> 4.0.2] (<a href="https://www.digitalocean.com/" class="uri">https://www.digitalocean.com/</a>)</p></li>
 <li><p>HTTP GET provides easy access to the API endpoint: _<a href="http://138.68.55.88/kstl_" class="uri">http://138.68.55.88/kstl_</a></p></li>
 </ul>
 <p>This initial version of the endpoint requires that code [denoting order in Key logic] and language [EN or SP] be specified, as in this example:</p>
@@ -34,7 +34,7 @@ tags:
 <p>For now, the structure with the “clause” as the fundamental taxonomic logical “unit” will be retained but rpresentation will likely be altered as the functionality of the database becomes more robust.</p>
 <p>Setting up a <em>plumber</em> API is really simple on your local machine.
 RStudio provides templates and examples that can be created via <strong>File &gt;&gt; New File &gt;&gt; Plumber API…</strong>.</p>
-<p>The gist is that <em>plumber</em> API endpoints are R functions with special markup: <code>#*</code>(similar to <em>Roxygen</em>).</p>
+<p>The gist is that <em>plumber</em> API endpoints are <strong>R</strong> functions with special markup: <code>#*</code>(similar to <em>Roxygen</em>).</p>
 <pre class="r"><code>#* Get criteria by taxon code and language
 #* @param code Taxon code to query
 #* @param language Language database to use
@@ -42,6 +42,7 @@ RStudio provides templates and examples that can be created via <strong>File &gt
 function(code, language) {
    # ... API logic goes here ...
 }</code></pre>
-<p>RStudio also provides hosting for <em>plumber</em> API services via RStudio Connect. For my API, I used DigitalOcean [which, like RStudio Connect, is a paid service] that is integrated with R via the <em>plumber</em> and <em>analogsea</em> packages. For individuals who are semi-experienced with Linux servers the flexibility and low cost of DigitalOcean makes it quite attractive. If all you need is a plumber API, however, RSC may be easier.</p>
+<p>RStudio also provides hosting for <em>plumber</em> API services via RStudio Connect. For my API, I used DigitalOcean [which, like RStudio Connect, is a paid service] that is integrated with <strong>R</strong> via the <em>plumber</em> and <em>analogsea</em> packages.</p>
+<p>For individuals who are semi-experienced with Linux servers the flexibility and low cost of DigitalOcean makes it quite attractive. If all you need is a plumber API, however, RSC may be easier.</p>
 <p>Currently DigitalOcean is offering a promotion where if you set up your account they will give you a $100 credit that you can use over a two month period. At the rate that I have been using my credit funds, it is unlikely I will use all of mine in time! I will likely try out some more costly features just to make use of it. Spinning up a Droplet at the lowest tier (what I am using) has a monthly cost of $5 – higher levels of performance and additional features incur greater costs.</p>
 <p>This API update comes along with some other improvements to the Soil Taxonomy Shiny Apps and criteria database. See what I have been up to on GitHub: <a href="https://github.com/brownag/ncss-standards/tree/master/KST" class="uri">https://github.com/brownag/ncss-standards/tree/master/KST</a></p>

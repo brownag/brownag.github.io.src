@@ -19,7 +19,7 @@ For the [KSTLookup Shiny App](https://brownag.shinyapps.io/KSTLookup) I am provi
 
 - The R API was developed using _plumber_ (https://www.rplumber.io/)
 
-- The service is run "in the cloud" on a "droplet" [Ubuntu 20.04 / R 4.0.2] (https://www.digitalocean.com/) 
+- The service is run "in the cloud" on a "droplet" [Ubuntu 20.04 / **R** 4.0.2] (https://www.digitalocean.com/) 
 
 - HTTP GET provides easy access to the API endpoint: _http://138.68.55.88/kstl_
 
@@ -39,7 +39,8 @@ For now, the structure with the "clause" as the fundamental taxonomic logical "u
 Setting up a _plumber_ API is really simple on your local machine. 
 RStudio provides templates and examples that can be created via __File >> New File >> Plumber API...__. 
 
-The gist is that _plumber_ API endpoints are R functions with special markup: `#*`(similar to _Roxygen_). 
+The gist is that _plumber_ API endpoints are **R** functions with special markup: `#*`(similar to _Roxygen_). 
+
 ```{r eval=FALSE}
 #* Get criteria by taxon code and language
 #* @param code Taxon code to query
@@ -50,7 +51,9 @@ function(code, language) {
 }
 ```
 
-RStudio also provides hosting for _plumber_ API services via RStudio Connect. For my API, I used DigitalOcean [which, like RStudio Connect, is a paid service] that is integrated with R via the _plumber_ and _analogsea_ packages. For individuals who are semi-experienced with Linux servers the flexibility and low cost of DigitalOcean makes it quite attractive. If all you need is a plumber API, however, RSC may be easier. 
+RStudio also provides hosting for _plumber_ API services via RStudio Connect. For my API, I used DigitalOcean [which, like RStudio Connect, is a paid service] that is integrated with **R** via the _plumber_ and _analogsea_ packages. 
+
+For individuals who are semi-experienced with Linux servers the flexibility and low cost of DigitalOcean makes it quite attractive. If all you need is a plumber API, however, RSC may be easier. 
 
 Currently DigitalOcean is offering a promotion where if you set up your account they will give you a $100 credit that you can use over a two month period. At the rate that I have been using my credit funds, it is unlikely I will use all of mine in time! I will likely try out some more costly features just to make use of it. Spinning up a Droplet at the lowest tier (what I am using) has a monthly cost of $5 -- higher levels of performance and additional features incur greater costs.
 

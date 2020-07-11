@@ -10,11 +10,12 @@ tags:
   - loafercreek
 ---
 
-This is a tutorial (worked examples and exercises) demonstrating use of the profileApply() function from the R package <i>aqp</i>.
+This is a tutorial (worked examples and exercises) demonstrating use of the profileApply() function from the **R** package <i>aqp</i>.
 
 http://ncss-tech.github.io/AQP/demos/profileApply/loafercreek.html
 
-It loads a dataset, called `loafercreek` from the R package `soilDB`. 
+It loads a dataset, called `loafercreek` from the **R** package `soilDB`. 
+
 The analysis is supported by the package `sharpshootR`. These packages are in large part developed by Dylan Beaudette, but there now are many contributors within NCSS.
 
 Loafercreek the dataset is a collection of mostly moderately deep Ultic Haploxeralfs on metavolcanic rock from the CA630 soil survey area (parts of Calaveras and Tuolumne Counties.
