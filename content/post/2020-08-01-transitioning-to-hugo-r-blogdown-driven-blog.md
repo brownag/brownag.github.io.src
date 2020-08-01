@@ -3,8 +3,8 @@ title: Transitioning to hugo + R blogdown-driven blog
 author: Andrew G. Brown
 date: '2020-08-01'
 slug: transitioning-to-hugo-r-blogdown-driven-blog
-categories: []
-tags: []
+categories: [hugo, blogdown, R, Drupal, TravisCI]
+tags: [demonstrations]
 ---
 
 The [humus.rocks](http://humus.rocks/) website has used Drupal 7 for the last 2.5 years. I have only tapped a fraction of the resources that are available to me in the Drupal platform -- using it essentially as a glorified RSS feed aggregator and "blog".

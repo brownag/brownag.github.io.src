@@ -3,6 +3,31 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/categories/blogdown/</loc>
+    <lastmod>2020-08-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <lastmod>2020-08-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/demonstrations/</loc>
+    <lastmod>2020-08-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/drupal/</loc>
+    <lastmod>2020-08-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/hugo/</loc>
+    <lastmod>2020-08-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/</loc>
     <lastmod>2020-08-01T00:00:00+00:00</lastmod>
   </url>
@@ -13,17 +38,27 @@
   </url>
   
   <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2020-08-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-08-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/2020/08/01/transitioning-to-hugo-r-blogdown-driven-blog/</loc>
     <lastmod>2020-08-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/aqp/</loc>
-    <lastmod>2020-07-13T00:00:00+00:00</lastmod>
+    <loc>/categories/travisci/</loc>
+    <lastmod>2020-08-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>/categories/aqp/</loc>
     <lastmod>2020-07-13T00:00:00+00:00</lastmod>
   </url>
   
@@ -38,27 +73,12 @@
   </url>
   
   <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2020-07-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/soil-taxonomy/</loc>
     <lastmod>2020-07-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-07-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/note/2020/07/05/a-quick-goodbye-to-drupal/</loc>
-    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/blogdown/</loc>
     <lastmod>2020-07-05T00:00:00+00:00</lastmod>
   </url>
   
@@ -69,11 +89,6 @@
   
   <url>
     <loc>/post/2020/07/05/first-post-using-hugo-blogdown/</loc>
-    <lastmod>2020-07-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/hugo/</loc>
     <lastmod>2020-07-05T00:00:00+00:00</lastmod>
   </url>
   
@@ -134,11 +149,6 @@
   
   <url>
     <loc>/tags/climate/</loc>
-    <lastmod>2020-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/demonstrations/</loc>
     <lastmod>2020-06-05T00:00:00+00:00</lastmod>
   </url>
   

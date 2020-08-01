@@ -6,10 +6,19 @@
     <description>Recent content in Tags on humus.rocks - soil is life on the rocks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 13 Jul 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 01 Aug 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>demonstrations</title>
+      <link>/tags/demonstrations/</link>
+      <pubDate>Sat, 01 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/demonstrations/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>correlation</title>
@@ -26,15 +35,6 @@
       <pubDate>Mon, 13 Jul 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/soil-taxonomy/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>blogdown</title>
-      <link>/tags/blogdown/</link>
-      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/blogdown/</guid>
       <description></description>
     </item>
     
@@ -62,15 +62,6 @@
       <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/climate/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>demonstrations</title>
-      <link>/tags/demonstrations/</link>
-      <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/demonstrations/</guid>
       <description></description>
     </item>
     

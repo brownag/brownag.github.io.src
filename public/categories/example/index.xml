@@ -20,15 +20,5 @@
       <description>O&amp;rsquo; Drupal, I will not be sad that I left ye&amp;rsquo; in the dust.</description>
     </item>
     
-    <item>
-      <title>First post using Hugo &#43; blogdown</title>
-      <link>/post/2020/07/05/first-post-using-hugo-blogdown/</link>
-      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2020/07/05/first-post-using-hugo-blogdown/</guid>
-      <description>  This is a header This is some regular text.
-# this is some R code (with syntax highlighting) for (i in 1:10) { if (i %% 2 == 0) { print(sprintf(&amp;quot;this is a string %s&amp;quot;, i)) } } ## [1] &amp;quot;this is a string 2&amp;quot; ## [1] &amp;quot;this is a string 4&amp;quot; ## [1] &amp;quot;this is a string 6&amp;quot; ## [1] &amp;quot;this is a string 8&amp;quot; ## [1] &amp;quot;this is a string 10&amp;quot;  </description>
-    </item>
-    
   </channel>
 </rss>

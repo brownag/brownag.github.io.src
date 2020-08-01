@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>hugo on humus.rocks - soil is life on the rocks</title>
-    <link>/categories/hugo/</link>
-    <description>Recent content in hugo on humus.rocks - soil is life on the rocks</description>
+    <title>Drupal on humus.rocks - soil is life on the rocks</title>
+    <link>/tags/drupal/</link>
+    <description>Recent content in Drupal on humus.rocks - soil is life on the rocks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 01 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/hugo/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/drupal/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,16 +19,6 @@
       <guid>/post/2020/08/01/transitioning-to-hugo-r-blogdown-driven-blog/</guid>
       <description>The humus.rocks website has used Drupal 7 for the last 2.5 years. I have only tapped a fraction of the resources that are available to me in the Drupal platform &amp;ndash; using it essentially as a glorified RSS feed aggregator and &amp;ldquo;blog&amp;rdquo;.
 I would much rather write my blogs in markdown &amp;ndash; and then I can extend that to Rmarkdown for my more code-oriented topics or any case where I need to generate some content in a programmatic way.</description>
-    </item>
-    
-    <item>
-      <title>First post using Hugo &#43; blogdown</title>
-      <link>/post/2020/07/05/first-post-using-hugo-blogdown/</link>
-      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2020/07/05/first-post-using-hugo-blogdown/</guid>
-      <description>  This is a header This is some regular text.
-# this is some R code (with syntax highlighting) for (i in 1:10) { if (i %% 2 == 0) { print(sprintf(&amp;quot;this is a string %s&amp;quot;, i)) } } ## [1] &amp;quot;this is a string 2&amp;quot; ## [1] &amp;quot;this is a string 4&amp;quot; ## [1] &amp;quot;this is a string 6&amp;quot; ## [1] &amp;quot;this is a string 8&amp;quot; ## [1] &amp;quot;this is a string 10&amp;quot;  </description>
     </item>
     
   </channel>
