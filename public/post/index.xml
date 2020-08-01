@@ -6,10 +6,20 @@
     <description>Recent content in Posts on humus.rocks - soil is life on the rocks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 13 Jul 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 01 Aug 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Transitioning to hugo &#43; R blogdown-driven blog</title>
+      <link>/post/2020/08/01/transitioning-to-hugo-r-blogdown-driven-blog/</link>
+      <pubDate>Sat, 01 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/08/01/transitioning-to-hugo-r-blogdown-driven-blog/</guid>
+      <description>The humus.rocks website has used Drupal 7 for the last 2.5 years. I have only tapped a fraction of the resources that are available to me in the Drupal platform &amp;ndash; using it essentially as a glorified RSS feed aggregator and &amp;ldquo;blog&amp;rdquo;.
+I would much rather write my blogs in markdown &amp;ndash; and then I can extend that to Rmarkdown for my more code-oriented topics or any case where I need to generate some content in a programmatic way.</description>
+    </item>
     
     <item>
       <title>Estimations of Soil Depth with aqp</title>

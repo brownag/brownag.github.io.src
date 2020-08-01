@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Transitioning to hugo &#43; R blogdown-driven blog | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">Transitioning to hugo + R blogdown-driven blog</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/08/01</span></h3>
+<p class="terms">
+  
+  
+  
+  
+  
+</p>
+</div>
+
+<main>
+<p>The <a href="http://humus.rocks/">humus.rocks</a> website has used Drupal 7 for the last 2.5 years. I have only tapped a fraction of the resources that are available to me in the Drupal platform &ndash; using it essentially as a glorified RSS feed aggregator and &ldquo;blog&rdquo;.</p>
+<p>I would much rather write my blogs in markdown &ndash; and then I can extend that to Rmarkdown for my more code-oriented topics or any case where I need to generate some content in a programmatic way.</p>
+<p>So, I figured out how to use <a href="https://bookdown.org/yihui/blogdown/">blogdown</a>, <a href="https://gohugo.io/">hugo</a> and <a href="https://travis-ci.org/github/brownag/brownag.github.io.src/builds">TravisCI</a> to set up a simple pipeline from my personal computer to my GitHub Page (<a href="http://brownag.github.io/">http://brownag.github.io/</a>) for my markdown blog posts.</p>
+<p>Hugo and Blogdown integrate very well into RStudio-based development. There are simple console commands as well as the &ldquo;AddIns&rdquo; menu that provide options to serve the local version of the site, create new posts, insert images, and more.</p>
+<p><img src="/post/2020-08-01-transitioning-to-hugo-r-blogdown-driven-blog_files/hugoblogrstudiodemo.png" alt="humus.rocks blog driven by hugo + blogdown and developed in RStudio"></p>
+<p>The plan is that my GitHub Page, or a feed from it, would supersede the main Drupal-driven blog on <a href="http://humus.rocks/">humus.rocks</a>. Though, at that point, I am very close to being able to drop the Drupal dependency all together.</p>
+<p>The other main convenience offered by Drupal is the built-in RSS feed aggregator. A cron job I set up to run on the humus.rocks server ensures the feed contents are updated on approximately an hourly cycle. What I want to possibly do is modify my blogdown theme to integrate some Javascript code to allow feeds to be read and incorporated in the main page, having the client make the connection directly to the feed. I may pre-digest my feeds using cron job and post-processing on humus.rocks then I can serve up just a small subset via the blogdown blog page.</p>
+<p>I am currently using <a href="https://github.com/yihui/hugo-xmin">XMin</a>, a lightweight theme developed by Yihui Xue, the developer of blogdown, knitr and more! This theme should be relatively easy to extend for my new needs.</p>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+
