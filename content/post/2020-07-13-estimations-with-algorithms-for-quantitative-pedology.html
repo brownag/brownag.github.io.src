@@ -25,20 +25,20 @@ tags:
 <pre class="r"><code>library(aqp)
 
 # load example data from aqp package
-data(&quot;sp1&quot;)
+data(&quot;sp3&quot;)
 
 # create a SoilProfileCollection
 # depths specifies the profile ID, top and bottom depths in horizon data
-depths(sp1) &lt;- id ~ top + bottom
+depths(sp3) &lt;- id ~ top + bottom
 
 # inspect first 7 profiles from the set
-plotSPC(sp1[1:7,])</code></pre>
+plotSPC(sp3[1:7,])</code></pre>
 <p><img src="/post/2020-07-13-estimations-with-algorithms-for-quantitative-pedology_files/figure-html/estimateSoilDepth-1.png" width="960" /></p>
 <pre class="r"><code># aqp::profileApply and aqp::estimateSoilDepth 
 # 
-# - calculate depth of each profile in sp1
+# - calculate depth of each profile in sp3
 # 
-sp1$depth &lt;- profileApply(sp1, estimateSoilDepth)
+sp3$depth &lt;- profileApply(sp3, estimateSoilDepth)
 
 # aqp::guessHzDesgnName
 # 
@@ -46,34 +46,40 @@ sp1$depth &lt;- profileApply(sp1, estimateSoilDepth)
 # this is historic behavior of aqp::plotSPC and is used by estimateSoilDepth 
 # to locate the column containing horizon designations in the horizons slot
 # 
-guess &lt;- guessHzDesgnName(sp1)
+guess &lt;- guessHzDesgnName(sp3)
 guess</code></pre>
-<pre><code>## [1] &quot;&quot;</code></pre>
+<pre><code>## [1] &quot;name&quot;</code></pre>
 <pre class="r"><code># inspect
-horizons(sp1)[[guess]]</code></pre>
-<pre><code>## NULL</code></pre>
+horizons(sp3)[[guess]]</code></pre>
+<pre><code>##  [1] &quot;18 / 28&quot; &quot;19 / 14&quot; &quot;21 / 14&quot; &quot;22 / 13&quot; &quot;20 / 12&quot; &quot;7 / 8&quot;   &quot;7 / 5&quot;  
+##  [8] &quot;7 / 5&quot;   &quot;8 / 5&quot;   &quot;18 / 22&quot; &quot;20 / 13&quot; &quot;22 / 15&quot; &quot;25 / 14&quot; &quot;33 / 22&quot;
+## [15] &quot;56 / 42&quot; &quot;46 / 34&quot; &quot;15 / 16&quot; &quot;18 / 13&quot; &quot;21 / 14&quot; &quot;28 / 16&quot; &quot;46 / 40&quot;
+## [22] &quot;34 / 39&quot; &quot;14 / 20&quot; &quot;18 / 13&quot; &quot;25 / 14&quot; &quot;35 / 22&quot; &quot;39 / 26&quot; &quot;15 / 23&quot;
+## [29] &quot;22 / 12&quot; &quot;32 / 9&quot;  &quot;51 / 11&quot; &quot;7 / 7&quot;   &quot;6 / 4&quot;   &quot;10 / 5&quot;  &quot;11 / 6&quot; 
+## [36] &quot;11 / 6&quot;  &quot;11 / 6&quot;  &quot;16 / 7&quot;  &quot;9 / 7&quot;   &quot;9 / 8&quot;   &quot;8 / 6&quot;   &quot;10 / 5&quot; 
+## [43] &quot;12 / 15&quot; &quot;9 / 6&quot;   &quot;8 / 5&quot;   &quot;5 / 4&quot;</code></pre>
 <p>At the most basic level in an “estimate” you have one or more inputs producing a single, possibly complex, output. Estimates might be made at the horizon, site/profile or group level.</p>
-<p>Let’s look at all of the soil depths in the <code>sp1</code> collection as a histogram. We make an estimate for each profile, then we summarize those estimates for the “group” <code>sp1</code>.</p>
-<pre class="r"><code>hist(sp1$depth, 
-     main = &quot;Histogram of Soil Depth [sp1]&quot;, 
+<p>Let’s look at all of the soil depths in the <code>sp3</code> collection as a histogram. We make an estimate for each profile, then we summarize those estimates for the “group” <code>sp3</code>.</p>
+<pre class="r"><code>hist(sp3$depth, 
+     main = &quot;Histogram of Soil Depth [sp3]&quot;, 
      xlim = c(0,300),
      breaks = 8, freq = TRUE)</code></pre>
 <p><img src="/post/2020-07-13-estimations-with-algorithms-for-quantitative-pedology_files/figure-html/plot-hist-depth-1.png" width="672" /></p>
-<pre class="r"><code>res &lt;- quantile(sp1$depth, probs = c(0.05,0.5,0.95))</code></pre>
+<pre class="r"><code>res &lt;- quantile(sp3$depth, probs = c(0.05,0.5,0.95))</code></pre>
 <p>We can summarize distributions of samples and populations (“groups”) quantitatively using <em>quantiles</em>, as shown in the code above.</p>
 <p><code>res</code> contains the following:</p>
 <pre class="r"><code>res</code></pre>
-<pre><code>##    5%   50%   95% 
-##  60.2  89.0 237.2</code></pre>
+<pre><code>##     5%    50%    95% 
+##  69.00  86.50 104.35</code></pre>
 <p>These quantiles are <code>x</code> “positions” along an the “probability density function” – an empirically defined, non-parametric curve fit to the available data. The observed values (<code>prop</code>) are the <code>y</code> axis.</p>
 <p>Approximately 5% of data values are greater than the 95th percentile (0.95 probability level). And likewise for the proportion of values that are less than the 5th percentile. Using the default quantile method, values returned may be interpolated between observed values, depending on the distribution and probability levels requested (<code>probs</code> argument).</p>
 <pre class="r"><code># make a plot of soil_depth probability density function (pdf)
-plot(density(sp1$depth, na.rm=TRUE, bw=5), 
-     main=&quot;Density plot of Soil Depth [sp1]&quot;)
+plot(density(sp3$depth, na.rm=TRUE, bw=5), 
+     main=&quot;Density plot of Soil Depth [sp3]&quot;)
 
 # add summary statistics
 abline(v = res[2], lwd = 2, col = &quot;RED&quot;) # median / 50%
-abline(v = mean(sp1$depth), lwd = 2, col = &quot;blue&quot;) # mean
+abline(v = mean(sp3$depth), lwd = 2, col = &quot;blue&quot;) # mean
 abline(v = res[-2], lty = 2) # everything other than the median (5%+95%)
 
 # add legend
@@ -82,19 +88,20 @@ legend(&quot;topright&quot;,
        col = c(&quot;RED&quot;,&quot;BLUE&quot;,&quot;BLACK&quot;), 
        lty = c(1,2,2), lwd = c(2,2,1))</code></pre>
 <p><img src="/post/2020-07-13-estimations-with-algorithms-for-quantitative-pedology_files/figure-html/plot-density-depth-1.png" width="960" /></p>
-<p>This small dataset of 9 pedons has a distinctly bimodal appearance – there appear to be two groups: moderately deep and very deep.</p>
-<p>The 5th and 95th percentiles are broadly spaced. The mean is affected by several large values, whereas the median reflects a general concentration of data towards the lower end of the scale.</p>
-<pre class="r"><code>getSoilDepthClass(sp1)</code></pre>
-<pre><code>##     id depth very.shallow shallow mod.deep  deep very.deep depth.class
-## 1 P001    89        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
-## 2 P002    59        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
-## 3 P003    67        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
-## 4 P004    62        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
-## 5 P005    68        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
-## 6 P006   200        FALSE   FALSE    FALSE FALSE      TRUE   very.deep
-## 7 P007   233        FALSE   FALSE    FALSE FALSE      TRUE   very.deep
-## 8 P008   200        FALSE   FALSE    FALSE FALSE      TRUE   very.deep
-## 9 P009   240        FALSE   FALSE    FALSE FALSE      TRUE   very.deep</code></pre>
+<p>This small dataset of 10 pedons has a unimodal appearance.</p>
+<p>The 5th and 95th percentiles generally encompass the moderately deep depth class. The mean is affected by several large values, whereas the median reflects a general concentration of data towards the lower end of the scale.</p>
+<pre class="r"><code>getSoilDepthClass(sp3)</code></pre>
+<pre><code>##    id depth very.shallow shallow mod.deep  deep very.deep depth.class
+## 1   1    80        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
+## 2  10    90        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
+## 3   2    85        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
+## 4   3    90        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
+## 5   4    88        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
+## 6   5    60        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
+## 7   6    85        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
+## 8   7    95        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep
+## 9   8   112        FALSE   FALSE    FALSE  TRUE     FALSE        deep
+## 10  9    80        FALSE   FALSE     TRUE FALSE     FALSE    mod.deep</code></pre>
 <p>Looking back at the original profile plot, we notice most do not have bedrock layers as part of the description though there is wide variation in depth class from moderately to very deep. It would be interesting to have more detailed description about the nature of those contacts.</p>
 <div id="lets-consider-issue-27-from-aqp." class="section level4">
 <h4>Let’s consider Issue #27 from <em>aqp</em>.</h4>
@@ -168,13 +175,14 @@ legend(&quot;topright&quot;,
 <li><p>What is most likely estimate [accounting for 1 and 2]?</p></li>
 </ol>
 <p>In theory, a “rating” can be made for <em>each possible</em> estimate. The specific types of “estimate support” and logic problems, and their relative weights, are <em>data-model specific</em>. But the broad concept of “estimate quality” is generic: stack up a bunch of logical/numeric evaluations on attributes to assign a “quality ranking.”</p>
-<p>“Estimates” should be based on one or more site or horizon level properties reduced to a single value per horizon or profile.When estimating a site-level value there could be several possible “candidate values” due to many:one attribute:horizon:site relationships. In a single horizon with multiple attributes the aggregate of attributes may favor one value over others, which in turn may affect some aggregation to a site-level value. Where there is “confusion” about which “candidate value” to support the “quality” of the estimate is lower.</p>
+<p>“Estimates” should be based on one or more site or horizon level properties reduced to a single value per horizon or profile.</p>
+<p>When estimating a site-level value there could be several possible “candidate values” due to many:one attribute:horizon:site relationships. In a single horizon with multiple attributes the aggregate of attributes may favor one value over others, which in turn may affect some aggregation to a site-level value. Where there is “confusion” about which “candidate value” to support the “quality” of the estimate is lower.</p>
 </div>
 <div id="paralithic-contacts-paralithic-materials-lithic-contacts-and-the-materials-below-a-lithic-contact" class="section level4">
 <h4>Paralithic contacts, paralithic materials, lithic contacts, and the materials below a lithic contact</h4>
 <p>A common thing I am suspicious of in my area of the world are 25cm thick Cr horizons with no underlying R. This incidentally falls right on the line for the series control section. Was a lithic contact encountered at 25cm that caused them to stop digging? Was it intended to imply that the paralithic materials were thick? Was it a misunderstanding of the difference between describing the whole series control section and a data population standard?</p>
-<p>Digging to 25cm with extreme effort just to call it a 25cm thick Cr defeats the purpose – so the soil scientist was not clear on why they were digging / required to describe that far. These observations often are great in terms of soil properties for the solum but are inadequate to assess paralithic materials thickness in the series control section. It is quite likely that in the parent materials in question these pits were not dug to 25cm below the contact. If the Cr is that diggable, it is not difficult to put it past the threshold for the SCS. If it is not, you should be either describing an R or making a note that the Cr is definitvely &gt;25cm thick.</p>
-<p>For series criteria, one needs to “decide” whether the soil has a thick or a thin paralithic material “mantle” one way or another. There is nothing magical about “25,” other than it is the limit that was chosen, On some level, the decision MUST happen in the field. If adequate ancillary data are recorded in the field, such as: excavation difficulty, cementation, rooting patterns, MOISTURE patterns, then that decision can be assessed to varying degrees in the future.</p>
+<p>Digging to 25cm with extreme effort just to call it a 25cm thick Cr defeats the purpose – so the soil scientist was not clear on why they were digging / required to describe that far. These observations often are great in terms of soil properties for the solum but are inadequate to assess paralithic materials thickness in the Series Control Section. It is quite likely that in the parent materials in question these pits were not dug to 25cm below the contact. If the Cr is that “diggable,” it is not difficult to put it past the threshold for the Series Control Section. If it is not, you should be either describing an R or making a note that the Cr is definitively &gt;25cm thick.</p>
+<p>For series criteria, one needs to “decide” whether the soil has a thick or a thin paralithic material “mantle” one way or another. There is nothing magical about “25,” other than it is the limit that was chosen. On some level, the decision MUST happen in the field. If adequate ancillary data are recorded in the field, such as: excavation difficulty, cementation, rooting patterns, MOISTURE patterns, then that decision can be assessed to varying degrees in the future.</p>
 <p>Deviation between horizons, diagnostics and restrictions is handled variably in Quality Assurance around the country; some of which has probably spurred arbitrary “corrections” of data that were “inconsistent” or missing. In my work I have been allowed to have these properties deviate if needed – but do not generally feel the need to take this option.</p>
 </div>
 <div id="effects-on-soil-correlation" class="section level4">
@@ -183,7 +191,7 @@ legend(&quot;topright&quot;,
 <p>Two easy justifications for this in my mind are close root spacing or significant pedogenic development – which preclude densic materials. Practical reasons why one might “want” a densic restriction despite one or more criteria being met would be to use it to justify Endo- versus Epi aqu- Great Groups. Since up to 25 cm below certain root limiting layers is included in the control section, it can be used to demonstrate “dry materials” within the lower part of the control section.</p>
 <p>This all reflects a much more general “problem” in soil survey: It is very difficult to “prove” the existence of soil types that hinge on recording very specific attributes. This is especially true if the data are not all collected by the same scientist(s) or under the same set of working standards – but applies just as well because of “Nature.”</p>
 <p>Matching up to a very detailed “prototype” pedon doesn’t usually pan out when you “fan out all the descriptions for a soil component and squint your eyes.” A description containing multiple horizons that could construed as a contact is inherently reflective of a detailed description.</p>
-<p>There is value in having a highdetail in descriptions – but it requires considering properties (like contacts) “in aggregate” after some sort of risk-weighting logic.</p>
+<p>There is value in having a high-detail in individual descriptions but it requires considering properties (like contacts) “in aggregate” after some sort of risk-weighting logic, as well as other simplifications to make estimates more generic.</p>
 </div>
 <div id="extending-estimatesoildepth" class="section level4">
 <h4>Extending <code>estimateSoilDepth</code></h4>
@@ -209,9 +217,9 @@ lines(density(depth_to_Cd, from = 0, bw = 10, na.rm = TRUE), col = 8, lwd = 2)
 lines(density(depth_to_Cr, from = 0, bw = 10, na.rm = TRUE), col = 1, lwd = 1, lty = 2)
 legend(&quot;top&quot;, c(&quot;k&quot;,&quot;kk&quot;,&quot;y&quot;,&quot;Cd&quot;, &quot;Cr&quot;), col = c(7,3,12,8,1), lwd = c(2,2,2,2,1), lty=c(1,1,1,1,2))</code></pre>
 <p><img src="/post/2020-07-13-estimations-with-algorithms-for-quantitative-pedology_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>My preference from here would be to leave <code>estimateSoilDepth</code> alone, and generalize <code>depthOf</code> further for arbitrary logical expressions (like <code>aqp::filter</code>). Pattern matching behavior could be replicated using <code>grepl</code> based expressions.</p>
-<p>The old dataset that was pulled before cementation and other criteria were included in the default fetchNASIS result. Dylan already did the diagnostic horizon based analysis.</p>
-<p>Here we inspect for evidence of pedogenesis. We can clearly see that all Cd horizons without <code>k</code> or <code>y</code> suffixes (<code>depth_to_Cd2</code>) are deeper than the corresponding estimate that looked for any horizon just containing <code>Cd</code>: the default part used in <code>estimateSoilDepth. A custom pattern to filter to Cd without pedogenesis or Cr or R would be</code>“Cd[^ky]|Cr|R”`</p>
+<p>My preference from here would be to leave <code>estimateSoilDepth</code> alone, and generalize <code>depthOf</code> further for arbitrary logical expressions like several other functions in <code>aqp</code>, only for horizon data explicitly. Pattern matching behavior could be replicated using <code>grepl</code> based expressions.</p>
+<p>The old dataset I provide in the CSV files that was queried from NASIS before cementation and other criteria were included in the default <code>fetchNASIS</code> result. Dylan already did the diagnostic horizon based analysis in his post on the issue, so we will do something different.</p>
+<p>Here we inspect for evidence of pedogenesis – as you cannot meet the criteria for densic materials if you have significant pedogenesis. We can clearly see that all Cd horizons without <code>k</code> or <code>y</code> suffixes (<code>depth_to_Cd2</code>) are deeper than the corresponding estimate that looked for any horizon just containing <code>Cd</code>: the default part used in <code>estimateSoilDepth</code>. A custom pattern to filter to Cd without pedogenesis or Cr or R would be <code>"Cd[^ky]|Cr|R"</code></p>
 <pre class="r"><code>plot(depth_to_Cd ~ depth_to_Cd2)</code></pre>
 <p><img src="/post/2020-07-13-estimations-with-algorithms-for-quantitative-pedology_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
