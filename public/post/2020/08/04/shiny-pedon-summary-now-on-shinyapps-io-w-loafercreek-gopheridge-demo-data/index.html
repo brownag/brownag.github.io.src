@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shiny Pedon Summary: Loafercreek &amp; Gopheridge demo | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">Shiny Pedon Summary: Loafercreek &amp; Gopheridge demo</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/08/04</span></h3>
+<p class="terms">
+  
+  
+  Categories: 
+  <a href="/categories/r">R</a> 
+  <a href="/categories/shiny">shiny</a> 
+  <a href="/categories/aqp">aqp</a> 
+  <a href="/categories/flexdashboard">flexdashboard</a> 
+  
+  
+  
+  Tags: 
+  <a href="/tags/demonstrations">demonstrations</a> 
+  
+  
+</p>
+</div>
+
+<main>
+<p>This is the Shiny &ldquo;flexdashboard&rdquo; version of the &ldquo;pedon summary report&rdquo; originally developed by Dylan Beaudette. I have developed and refined this dashboard periodically over several years. I developed it initially as a very simple interface to <em>semi-automate</em> viewing profile sketches and report generation based on mapunit, series name and taxon kind.</p>
+<p><a href="https://brownag.shinyapps.io/ShinyPedonSummary/">https://brownag.shinyapps.io/ShinyPedonSummary/</a></p>
+<p>This tool has been part of the ncss-tech <code>soilReports</code> package for a while now, but recent revisions improve efficiency and produce static output matching the original report Dylan developed.</p>
+<p>Unfortunately, the &ldquo;Export Report&rdquo; button does nothing on the web-based demo, so if you are interested in that &ndash; you will need to set up <strong>R</strong> and <code>soilReports</code> to try it out ;)</p>
+<p><img src="/post/2020-08-03-shiny-pedon-summary-now-on-shinyapps-io-w-loafercreek-gopheridge-demo-data_files/shinypedonsummary1.png" alt="The Shiny Pedon Dashboard is centered around the &ldquo;sketches&rdquo; made with the plot method for SoilProfileCollection objects from aqp."></p>
+<p>The Shiny dashboard, implemented with the <code>flexdashboard</code> package, is a shiny runtime output type that allows me to easily add markup for tabbed views, the left-hand &ldquo;Input&rdquo; pane, etc. These features allow the user to perform arbitrary filtering of the input pedon data on a variety of common attributes (mapunit symbol by overlay with input shapefile, taxon name, local phase, taxon kind, User Pedon ID). Typically, the report is run on a machine with a local NASIS database containing (potentially many) pedon descriptions. The filtering allows smaller relevant sets of data to be grouped together. In principle any sort of geographic boundary could be used as the input shapefile, but it is often practical to use SSURGO MUSYMs as strata.</p>
+<p>Quantitative summaries of horizon morphologic data (clay, sand, fragments etc.) are using quantiles and defined probability levels for low-RV-high. The default values are <code>0.05</code>, <code>0.5</code> (median) and <code>0.95</code> &ndash; which conceptually excludes 5% on each &ldquo;tail&rdquo; of the data.</p>
+<p>Tabs make quickly switching through attributes and graphical output easy. Regular expression-driven filtering ensures you can make many combinations and exclusions to get your data filtered the way you need.</p>
+<p>Dylan&rsquo;s function prepares a variety of tabular and graphical data from an input <code>aqp</code> <em>SoilProfileCollection</em> &ndash; typically from NASIS pedons. The individual outputs from the summary function (elements of a list) are the &ldquo;tabs&rdquo; in the dashboard and the sections within the static report. In the demo hosted on shinyapps.io, I have combined two common datasets from the <code>soilDB</code> package (<code>loafergopher</code>: <code>loafercreek</code> + <code>gopheridge</code>??) to provide several series and components worth of information to &ldquo;sift&rdquo; through in the demo of the report.</p>
+<p><img src="/post/2020-08-03-shiny-pedon-summary-now-on-shinyapps-io-w-loafercreek-gopheridge-demo-data_files/shinypedonsummary2.png" alt="Extending the capabilities of the report with interactive widgets has only begun to be explored with the mapview package. Much useful information about profiles in a SoilProfileCollection can be determined by the filter-pan-click method">
+There are a couple drop-down boxes that will allow you to change the thematic attribute and modal pedon. These add helpful visualizations and additional tabular output for comparing pedons across multiple attributes and/or selecting component pedons.</p>
+<p>The README provides a very brief description of what the different parts of the interface are and a walk through of usage.</p>
+<p><a href="https://github.com/ncss-tech/soilReports/tree/master/inst/reports/region2/shiny-pedon-summary">https://github.com/ncss-tech/soilReports/tree/master/inst/reports/region2/shiny-pedon-summary</a></p>
+<p>But, if that does not answer your questions, or you have ideas/requests, check out the <code>soilReports</code> issues page on GitHub: <a href="https://github.com/ncss-tech/soilReports/issues">https://github.com/ncss-tech/soilReports/issues</a></p>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+

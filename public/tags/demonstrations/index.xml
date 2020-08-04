@@ -6,10 +6,21 @@
     <description>Recent content in demonstrations on humus.rocks - soil is life on the rocks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 01 Aug 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 03 Aug 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/demonstrations/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Shiny Pedon Summary: Loafercreek &amp; Gopheridge demo</title>
+      <link>/post/2020/08/03/shiny-pedon-summary-now-on-shinyapps-io-w-loafercreek-gopheridge-demo-data/</link>
+      <pubDate>Mon, 03 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/08/03/shiny-pedon-summary-now-on-shinyapps-io-w-loafercreek-gopheridge-demo-data/</guid>
+      <description>This is the Shiny &amp;ldquo;flexdashboard&amp;rdquo; version of the &amp;ldquo;pedon summary report&amp;rdquo; originally developed by Dylan Beaudette. I have developed and refined this dashboard periodically over several years. I developed it initially as a very simple interface to semi-automate viewing profile sketches and report generation based on mapunit, series name and taxon kind.
+https://brownag.shinyapps.io/ShinyPedonSummary/
+This tool has been part of the ncss-tech soilReports package for a while now, but recent revisions improve efficiency and produce static output matching the original report Dylan developed.</description>
+    </item>
     
     <item>
       <title>Transitioning to hugo &#43; R blogdown-driven blog</title>
