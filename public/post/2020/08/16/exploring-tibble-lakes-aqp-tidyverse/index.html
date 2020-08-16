@@ -64,31 +64,10 @@
 <p>So, that is why we are using lake cores rather than the typical canned soil-database examples from <em>aqp</em> and <em>soilDB</em>. Lake sediments are cool and important troves of information – even where they do not technically meet our criteria for subaqueous soils! I think pedology benefits from study of (paleo-)limnology and it’s techniques!</p>
 <p>Install the required packages if needed. Be sure to get the latest version of <em>aqp</em> off <a href="http://ncss.tech.github.io/aqp/">GitHub</a>. At time of writing this post (August 2020), the features that allow for support for <code>tbl_df</code> and <code>data.table</code> in <em>SoilProfileCollection</em> objects are not yet on CRAN [but will be soon].</p>
 <pre class="r"><code># install dependencies and CRAN version of packages
-install.packages(c(&quot;remotes&quot;, &quot;aqp&quot;, &quot;tidyverse&quot;))</code></pre>
-<pre><code>## Installing packages into &#39;/home/andrew/R/x86_64-pc-linux-gnu-library/4.0&#39;
-## (as &#39;lib&#39; is unspecified)</code></pre>
-<pre class="r"><code># install development version of aqp
-remotes::install_github(&quot;ncss-tech/aqp&quot;, dependencies = FALSE)</code></pre>
-<pre><code>## Using github PAT from envvar GITHUB_PAT</code></pre>
-<pre><code>## Downloading GitHub repo ncss-tech/aqp@HEAD</code></pre>
-<pre><code>##   
-   checking for file ‘/tmp/RtmpmroHRq/remotes43a621c8d48a2/ncss-tech-aqp-a98a692/DESCRIPTION’ ...
-  
-✓  checking for file ‘/tmp/RtmpmroHRq/remotes43a621c8d48a2/ncss-tech-aqp-a98a692/DESCRIPTION’ (453ms)
-## 
-  
-─  preparing ‘aqp’: (386ms)
-## ✓  checking DESCRIPTION meta-information
-## ─  checking for LF line-endings in source and make files and shell scripts
-## ─  checking for empty or unneeded directories
-## ─  looking to see if a ‘data/datalist’ file should be added
-## ─  building ‘aqp_1.22.tar.gz’
-## 
-  
-   
-## </code></pre>
-<pre><code>## Installing package into &#39;/home/andrew/R/x86_64-pc-linux-gnu-library/4.0&#39;
-## (as &#39;lib&#39; is unspecified)</code></pre>
+install.packages(c(&quot;remotes&quot;, &quot;aqp&quot;, &quot;tidyverse&quot;))
+
+# install development version of aqp
+remotes::install_github(&quot;ncss-tech/aqp&quot;, dependencies = FALSE, quiet = TRUE)</code></pre>
 <p>Load the packages. We will use <em>ggplot2</em> for most plots and base <strong>R</strong> <em>graphics</em> for <em>SoilProfileCollection</em> sketches.</p>
 <pre class="r"><code>library(aqp)
 library(tidyverse)
@@ -132,7 +111,7 @@ head(pocmaj_raw)</code></pre>
 ## 4 poc15-2 1  1488  2016    36
 ## 5 poc15-2 2  2416  3270    79
 ## 6 poc15-2 3  2253  3197    79</code></pre>
-<p>On inspection we find a field <code>sample_id</code> which contains <em>site</em>, <em>year</em>, <em>core</em> and <em>layer</em>-level identifiers. Some of these combinations are repeated with unique values of analytes. In this case, assume the layer identifier is the top depth in meters AND that the cores were collected in constant increments of 1 meter. The elements are measured with a portable X-ray fluorescence unit – which does not truly measure concentration – I have reported the units as [pXRF] here.</p>
+<p>On inspection we find a field <code>sample_id</code> that contains <em>site</em>, <em>year</em>, <em>core</em> and <em>layer</em>-level identifiers. Some of these combinations are repeated with unique values of analytes. In this case, assume the layer identifier is the top depth in meters AND that the cores were collected in constant increments of 1 meter. The elements are measured with a portable X-ray fluorescence unit – which does not truly measure concentration – I have reported the units as [pXRF] here.</p>
 <p>For the sample data, we have repeated measures in depth – because points in lakes were sampled at successively greater depth slices. The core segments along Z collected at an X, Y location in a lake are not independent, though they may intercept layers that are dissimilar from one another. In the sample data, the shallowest and deepest layers (<code>"0"</code> and <code>"5"</code>) have replicates. If this were our data, we would try to make use of this with the rest of the cores – but we only have them for a subset of depths in two cores, so we generalize with the <code>median()</code>.</p>
 <div id="dplyr-wrangling-for-input-to-aqp" class="section level2">
 <h2><em>dplyr</em> wrangling for input to <em>aqp</em></h2>

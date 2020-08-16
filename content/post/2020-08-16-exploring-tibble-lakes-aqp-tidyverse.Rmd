@@ -15,12 +15,12 @@ So, that is why we are using lake cores rather than the typical canned soil-data
 
 Install the required packages if needed. Be sure to get the latest version of _aqp_ off [GitHub](http://ncss.tech.github.io/aqp/). At time of writing this post (August 2020), the features that allow for support for `tbl_df` and `data.table` in _SoilProfileCollection_ objects are not yet on CRAN [but will be soon].
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # install dependencies and CRAN version of packages
 install.packages(c("remotes", "aqp", "tidyverse"))
 
 # install development version of aqp
-remotes::install_github("ncss-tech/aqp", dependencies = FALSE)
+remotes::install_github("ncss-tech/aqp", dependencies = FALSE, quiet = TRUE)
 ```
 
 Load the packages. We will use _ggplot2_ for most plots and base **R** _graphics_ for _SoilProfileCollection_ sketches.
@@ -64,7 +64,7 @@ pocmaj_raw <- tribble(
 head(pocmaj_raw)
 ```
 
-On inspection we find a field `sample_id` which contains _site_, _year_, _core_ and _layer_-level identifiers. Some of these combinations are repeated with unique values of analytes. In this case, assume the layer identifier is the top depth in meters AND that the cores were collected in constant increments of 1 meter. The elements are measured with a portable X-ray fluorescence unit -- which does not truly measure concentration -- I have reported the units as [pXRF] here.
+On inspection we find a field `sample_id` that contains _site_, _year_, _core_ and _layer_-level identifiers. Some of these combinations are repeated with unique values of analytes. In this case, assume the layer identifier is the top depth in meters AND that the cores were collected in constant increments of 1 meter. The elements are measured with a portable X-ray fluorescence unit -- which does not truly measure concentration -- I have reported the units as [pXRF] here.
 
 For the sample data, we have repeated measures in depth -- because points in lakes were sampled at successively greater depth slices. The core segments along Z collected at an X, Y location in a lake are not independent, though they may intercept layers that are dissimilar from one another. In the sample data, the shallowest and deepest layers (`"0"` and `"5"`) have replicates. If this were our data, we would try to make use of this with the rest of the cores -- but we only have them for a subset of depths in two cores, so we generalize with the `median()`.
 
