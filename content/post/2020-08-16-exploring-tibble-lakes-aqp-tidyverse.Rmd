@@ -15,7 +15,7 @@ So, that is why we are using lake cores rather than the typical canned soil-data
 
 Install the required packages if needed. Be sure to get the latest version of _aqp_ off [GitHub](http://ncss.tech.github.io/aqp/). At time of writing this post (August 2020), the features that allow for support for `tbl_df` and `data.table` in _SoilProfileCollection_ objects are not yet on CRAN [but will be soon].
 
-```{r, eval = FALSE}
+```{r}
 # install dependencies and CRAN version of packages
 install.packages(c("remotes", "aqp", "tidyverse"))
 
