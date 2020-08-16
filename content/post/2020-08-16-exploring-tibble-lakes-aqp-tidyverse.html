@@ -231,8 +231,12 @@ ggplot(littlebig, aes(x = V, after_stat(density),
 </div>
 <div id="grouped-profile-plot" class="section level2">
 <h2>Grouped Profile Plot</h2>
-<p>Here, we sample</p>
-<pre class="r"><code>groupedProfilePlot(bigpocmaj[sample(1:length(bigpocmaj), size = 30),], 
+<p>This is a <code>groupedProfilePlot()</code> showing the different realizations generated from each of the four “parent” core descriptions. They look pretty noisy as they are unaware of any sort of meaningful pattern of depth covariance.</p>
+<pre class="r"><code># default layer label is &quot;name&quot;
+horizons(bigpocmaj)$name &lt;- &quot;&quot;
+
+# plot
+groupedProfilePlot(bigpocmaj[sample(1:length(bigpocmaj), size = 30),], 
                    groups = &quot;core&quot;, color = &quot;V&quot;, print.id = FALSE)</code></pre>
 <p><img src="/post/2020-08-16-exploring-tibble-lakes-aqp-tidyverse_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 </div>

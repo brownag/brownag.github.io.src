@@ -273,9 +273,13 @@ We see bi-modal patterns exhibited in the layer medians are reflected and fleshe
 
 ## Grouped Profile Plot
 
-Here, we sample 
+This is a `groupedProfilePlot()` showing the different realizations generated from each of the four "parent" core descriptions. They look pretty noisy as they are unaware of any sort of meaningful pattern of depth covariance.
 
 ```{r, message = FALSE}
+# default layer label is "name"
+horizons(bigpocmaj)$name <- ""
+
+# plot
 groupedProfilePlot(bigpocmaj[sample(1:length(bigpocmaj), size = 30),], 
                    groups = "core", color = "V", print.id = FALSE)
 ```
