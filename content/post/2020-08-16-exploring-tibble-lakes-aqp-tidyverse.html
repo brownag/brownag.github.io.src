@@ -14,11 +14,16 @@ tags: [demonstrations]
 <p>The sample <a href="https://fishandwhistle.net/post/2017/using-the-tidyverse-to-wrangle-core-data/">lake core</a> data from Dewey Dunnington’s tidyverse core-data-wrangling tutorial are pretty “typical” of raw, stratified environmental data that you might have kicking around on your hard drive. It also has a lot of information content despite very small (subset) size – which you will see in his tutorial and in what follows. Dewey (<a href="http://github.com/paleolimbot">paleolimbot</a> on GitHub) is prolific; he has developed great fundamental tools with R, Python and C++ and you should check out his work.</p>
 <p>So, that is why we are using lake cores rather than the typical canned soil-database examples from <em>aqp</em> and <em>soilDB</em>. Lake sediments are cool and important troves of information – even where they do not technically meet our criteria for subaqueous soils! I think pedology benefits from study of (paleo-)limnology and it’s techniques!</p>
 <p>Install the required packages if needed. Be sure to get the latest version of <em>aqp</em> off <a href="http://ncss.tech.github.io/aqp/">GitHub</a>. At time of writing this post (August 2020), the features that allow for support for <code>tbl_df</code> and <code>data.table</code> in <em>SoilProfileCollection</em> objects are not yet on CRAN [but will be soon].</p>
-<pre class="r"><code># install dependencies and CRAN version of packages
-install.packages(c(&quot;remotes&quot;, &quot;aqp&quot;, &quot;tidyverse&quot;))
+<pre class="r"><code>packages.to.install &lt;- c(&quot;aqp&quot;, &quot;tidyverse&quot;)
 
-# install development version of aqp
-remotes::install_github(&quot;ncss-tech/aqp&quot;, dependencies = FALSE, quiet = TRUE)</code></pre>
+if (!all(packages.to.install %in% installed.packages())) {
+  
+   # install dependencies and CRAN version of packages
+   install.packages(c(&quot;remotes&quot;, packages.to.install)) 
+     
+   # install development version of aqp
+   remotes::install_github(&quot;ncss-tech/aqp&quot;, dependencies = FALSE, quiet = TRUE)
+}</code></pre>
 <p>Load the packages. We will use <em>ggplot2</em> for most plots and base <strong>R</strong> <em>graphics</em> for <em>SoilProfileCollection</em> sketches.</p>
 <pre class="r"><code>library(aqp)
 library(tidyverse)
@@ -224,6 +229,13 @@ ggplot(littlebig, aes(x = V, after_stat(density),
 <p><img src="/post/2020-08-16-exploring-tibble-lakes-aqp-tidyverse_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>We see bi-modal patterns exhibited in the layer medians are reflected and fleshed out in our simulated data <code>bigpocmaj</code>. Notice the extreme values at edges of the empirical distribution – which are <em>extrapolations</em> beyond the range observed in the input data.</p>
 </div>
+<div id="grouped-profile-plot" class="section level2">
+<h2>Grouped Profile Plot</h2>
+<p>Here, we sample</p>
+<pre class="r"><code>groupedProfilePlot(bigpocmaj[sample(1:length(bigpocmaj), size = 30),], 
+                   groups = &quot;core&quot;, color = &quot;V&quot;, print.id = FALSE)</code></pre>
+<p><img src="/post/2020-08-16-exploring-tibble-lakes-aqp-tidyverse_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
 <div id="compare-percentiles" class="section level2">
 <h2>Compare percentiles</h2>
 <pre class="r"><code># raw v.s. median (analyte 1:1 with layer) v.s. synthetic
@@ -258,7 +270,7 @@ ggplot(hbpp, aes(x = V, y = top)) +
        geom_path(data = hbpp, aes(x = p.q5, y = top, color = factor(core)), linetype = 3) + 
        geom_path(data = hbpp, aes(x = p.q95, y = top, color = factor(core)), linetype = 3) +
        scale_color_manual(values = cbPalette) + theme_bw()</code></pre>
-<p><img src="/post/2020-08-16-exploring-tibble-lakes-aqp-tidyverse_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="/post/2020-08-16-exploring-tibble-lakes-aqp-tidyverse_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <!--
 Here are two base **R** plots you can try on your own for comparison to _ggplot2_.
 
