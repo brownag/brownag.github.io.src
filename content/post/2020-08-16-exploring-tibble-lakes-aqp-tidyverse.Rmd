@@ -1,0 +1,374 @@
+---
+title: Exploring the tidyverse, lakes, synthetic data, and tibble-SoilProfileCollections
+author: Andrew G. Brown
+date: '2020-08-16'
+slug: exploring-tibble-lakes-aqp-tidyverse
+categories: [R, tidyverse, aqp, SoilProfileCollection, mutate_profile, permute_profile, limnology]
+tags: [demonstrations]
+---
+
+In this brief tutorial, we will be using the _aqp_ and _tidyverse_ **R** packages for wrangling stratified environmental data from lake cores. 
+
+The sample [lake core](https://fishandwhistle.net/post/2017/using-the-tidyverse-to-wrangle-core-data/) data from Dewey Dunnington's tidyverse core-data-wrangling tutorial are pretty "typical" of raw, stratified environmental data that you might have kicking around on your hard drive. It also has a lot of information content despite very small (subset) size -- which you will see in his tutorial and in what follows. Dewey ([paleolimbot](http://github.com/paleolimbot) on GitHub) is prolific; he has developed great fundamental tools with R, Python and C++ and you should check out his work.
+
+So, that is why we are using lake cores rather than the typical canned soil-database examples from _aqp_ and _soilDB_.  Lake sediments are cool and important troves of information -- even where they do not technically meet our criteria for subaqueous soils! I think pedology benefits from study of (paleo-)limnology and it's techniques!
+
+Install the required packages if needed. Be sure to get the latest version of _aqp_ off [GitHub](http://ncss.tech.github.io/aqp/). At time of writing this post (August 2020), the features that allow for support for `tbl_df` and `data.table` in _SoilProfileCollection_ objects are not yet on CRAN [but will be soon].
+
+```{r, eval = FALSE}
+# install dependencies and CRAN version of packages
+install.packages(c("remotes", "aqp", "tidyverse"))
+
+# install development version of aqp
+remotes::install_github("ncss-tech/aqp", dependencies = FALSE)
+```
+
+Load the packages. We will use _ggplot2_ for most plots and base **R** _graphics_ for _SoilProfileCollection_ sketches.
+
+```{r message=FALSE}
+library(aqp)
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+# lake core data from @paleolimbot's tutorial
+# https://fishandwhistle.net/post/2017/using-the-tidyverse-to-wrangle-core-data
+
+# use tribble function to read in a comma-separated set of expressions and create a tibble
+pocmaj_raw <- tribble(
+  ~sample_id, ~Ca, ~Ti, ~V,  
+  "poc15-2 0", 1036, 1337, 29,
+  "poc15-2 0", 1951, 2427, 31,
+  "poc15-2 0", 1879, 2350, 39,
+  "poc15-2 1", 1488, 2016, 36,
+  "poc15-2 2", 2416, 3270, 79,
+  "poc15-2 3", 2253, 3197, 79,
+  "poc15-2 4", 2372, 3536, 87,
+  "poc15-2 5", 2621, 3850, 86,
+  "poc15-2 5", 2785, 3939, 95,
+  "poc15-2 5", 2500, 3881, 80,
+  "maj15-1 0", 1623, 2104, 73,
+  "maj15-1 0", 1624, 2174, 73,
+  "maj15-1 0", 2407, 2831, 89,
+  "maj15-1 1", 1418, 2409, 70,
+  "maj15-1 2", 1550, 2376, 70,
+  "maj15-1 3", 1448, 2485, 64,
+  "maj15-1 4", 1247, 2414, 57,
+  "maj15-1 5", 1463, 1869, 78,
+  "maj15-1 5", 1269, 1834, 71,
+  "maj15-1 5", 1505, 1989, 94
+)
+
+# inspect 
+head(pocmaj_raw)
+```
+
+On inspection we find a field `sample_id` which contains _site_, _year_, _core_ and _layer_-level identifiers. Some of these combinations are repeated with unique values of analytes. In this case, assume the layer identifier is the top depth in meters AND that the cores were collected in constant increments of 1 meter. The elements are measured with a portable X-ray fluorescence unit -- which does not truly measure concentration -- I have reported the units as [pXRF] here.
+
+For the sample data, we have repeated measures in depth -- because points in lakes were sampled at successively greater depth slices. The core segments along Z collected at an X, Y location in a lake are not independent, though they may intercept layers that are dissimilar from one another. In the sample data, the shallowest and deepest layers (`"0"` and `"5"`) have replicates. If this were our data, we would try to make use of this with the rest of the cores -- but we only have them for a subset of depths in two cores, so we generalize with the `median()`.
+
+## _dplyr_ wrangling for input to _aqp_
+
+We take the raw data and process it for use in the _aqp_ package. 
+
+We will use the `magrittr` "pipe" (`%>%`) operator to pipe or chain-together commands. The `%>%` facilitates passing variables to functions of the form `f(x, y)` as `x %>% f(y)`. This is unnecessary with only a single "step," but is particularly useful whenever you don't want to create a bunch of intermediate variables or would like to keep the sequence of your workflow easy to read.
+
+```{r, message=FALSE}
+pocmaj <- pocmaj_raw %>%
+  group_by(sample_id) %>%                 # group replicates together
+  summarize(Ca = median(Ca), 
+            Ti = median(Ti), 
+            V  = median(V)) %>%           # calculate sample analyte median
+  separate(sample_id, sep = " ",
+           into = c("core", "depth")) %>% # split sample_id -> core + depth
+  mutate(top = as.numeric(depth) * 100,   # calculate top and bottom depth
+         bottom = top + 100)              #  (assuming 100 cm increments)
+```
+
+We `group_by()` `sample_id` and then `summarize()` the `median()` for each `sample_id` and analyte. This "flattens" a possible many-to-one relationship for values per depth. After that we `separate()` `sample_id` into `core` (site-level) and `depth` (layer-level) IDs using `" "` (a space) as the delimiter. Finally, we we scale `depth` by a factor of `100` to convert from meters to centimeters. 
+
+We could choose `mean()` and `sd()` as they are unbiased estimators for our layer-level summary function. The demonstration shown later that uses profile-level standard deviations in Vanadium value could be relatively easily modified to use layer-level variance derived from replicates/bulk/sub samples etc. Other summary statistics could be calculated such as `max()` for risk-assessment. We use `median()` because it is good for central tendency and we will be permuting the values around a "centroid" as our final demonstration.
+
+## Promote _tbl_df_ to _SoilProfileCollection_ via the formula interface
+
+Once you have a site-level ID, top and bottom depth inside a _data.frame_-like object, you can use the formula interface to "promote" it to a _SoilProfileCollection_ object. This provides user access to to site and layer-level fields via the `site()` and `horizons()` S4 methods, respectively.
+
+For the sample data, or any stratified data without a bottom depth, we want to fill in a `bottom` depth using known sampling intervals and core geometry. This could be a bit of a "leap" if your values are actually "point" estimates and cannot be considered "representative" for the whole layer/block. 
+
+In _aqp_, the top and bottom depths are used as checks for depth-based ordering and topology -- which some algorithms are sensitive to. `depths<-` sorts layer data (in `@horizons` slot) first on profile ID (`core`) then on `top` depth. From sorted layer data, the `@site` slot data are derived.
+
+```{r}
+# promote pocmaj to SoilProfileCollection 
+depths(pocmaj) <- core ~ top + bottom
+```
+
+`core`, `top` and `bottom` are all columns that exist in `pocmaj`. _tbl_df_ and _data.table_ are subclasses supported by the _SoilProfileCollection_ in addition to _data.frame_.
+
+### `depths<-`
+
+Promoting via the formula interface follows this form:
+
+```{r eval=FALSE}
+depths(your.df) <- unique_site_ID ~ topdepth + bottomdepth
+```
+
+`your.df` is expected to be an object that inherits from _data.frame_. The `unique_site_ID` is shared between all layers associated with a single "profile," but there is no specific guarantee that the unique_site_ID*topdepth combination results in an layers that are in order, without overlaps, gaps, etc. You can check profile-level validity for a whole collection with the function `aqp::checkHzDepthLogic()`. Ensuring that the site and layer data have parity can be achieved with `aqp::spc_in_sync()` -- though this should not be necessary for _most_ external uses of _aqp_.
+
+### Soil profile sketches with `plotSPC`
+
+Let's make a profile sketch of core data for a single analyte, Vanadium (`V`). We will use this analyte through the rest of the tutorial.
+
+**From [Wikipedia](https://en.wikipedia.org/wiki/Vanadium):**
+
+> Vanadium is a chemical element with the symbol V and atomic number 23. It is a hard, silvery-grey, malleable transition metal. The elemental metal is rarely found in nature ... Vanadium occurs naturally in about 65 minerals and in fossil fuel deposits. It is produced in China and Russia from steel smelter slag. Other countries produce it either from magnetite directly, flue dust of heavy oil, or as a byproduct of uranium mining. It is mainly used to produce specialty steel alloys such as high-speed tool steels, and some aluminium alloys. 
+
+```{r}
+# plot soil profile sketch of one variable (V = Vanadium)
+plot(pocmaj, color = "V", name = "hzID")
+```
+
+## Producing site-level summaries from layer-level data with `mutate_profile`.
+
+`mutate_profile` is a special variety of `mutate` defined by the _aqp_ package. It contains built-in iteration to support multiple non-standard evaluation expressions that are evaluated in the context of each single profile in a collection. 
+
+The result must either resolve to unit length for a profile (a site-level field) or equal in length to the number of layers for that profile (a layer-level field).
+
+Let's define a function that we can use to summarize _SoilProfileCollection_ objects over arbitrary depth intervals. 
+
+```{r}
+#' Calculate site-level summary stats over interval [0, max.depth]
+#' @name summarize_core
+#' @param spc A SoilProfileCollection 
+#' @param max.depth Vertical depth to truncate output to [0, max.depth]; default: 600;
+#' @return A SoilProfileCollection
+summarize_core <- function(spc, max.depth = 600) {
+  
+  # max.depth is subject to some basic constraints
+  stopifnot(is.numeric(max.depth), length(max.depth) == 1, max.depth > 0)
+  
+  # truncate cores to a common depth interval [0, max.depth]
+  #   suppress aqp::glom warnings about cores with depth < max.depth
+  res <- suppressWarnings(trunc(spc, 0, max.depth))  %>% 
+    
+    # for the depth-weighted mean, calculate horizon thickness
+    #   identical to arithmetic mean if depth interval is constant
+    aqp::mutate(layer_wt = bottom - top) %>%
+    
+    # mutate_profile performs mutation by profile (site/core)
+    mutate_profile(dwt_V = weighted.mean(V, layer_wt),
+                   median_V = median(V), 
+                   mean_V = mean(V), 
+                   sd_V = sd(V))
+  return(res)
+}
+```
+
+```{r}
+# calculate depth-weighted average V within each core truncated to upper 200cm or 600cm
+pocmaj2 <- summarize_core(pocmaj, 200)
+pocmaj6 <- summarize_core(pocmaj, 600)
+
+# create unique profile IDs
+profile_id(pocmaj2) <- paste(profile_id(pocmaj2), "[0 - 2 m]")
+profile_id(pocmaj6) <- paste(profile_id(pocmaj6), "[0 - 6 m]")
+```
+
+The below code demonstrates effects of total sampling depth on aggregation of stratified layers to "point" or site-level values. 
+
+```{r}
+# inspect result (a site-level field calculated from all layers)
+pocmaj2and6 <- aqp::union(list(pocmaj2, pocmaj6))
+
+# combined plot
+plot(pocmaj2and6, color = "V", name = "hzID")
+
+# inspect
+site(pocmaj2and6)[,c(idname(pocmaj2and6), "dwt_V", "median_V", "mean_V", "sd_V")]
+```
+
+The summary statistics reflect what we noticed above in the profile plot and will be important later. One might be interested in aggregate properties of groups of cores summarized as above. We only have two unique cores -- but that won't stop us.
+
+We can take this further and aggregate cores together into groups based on proximity, process, etc. This small two-site example dataset appears to have two different water bodies or areas where cores were collected. Presumably there are more data from there. In this case, we want to compare our 2-meter depth-truncated cores to the full 6-meter depth cores to test the effect of sampling depth on observed aggregate statistics. What are you missing by coring only to 2 rather than 6? To do this we will create a synthetic dataset.
+
+## Generating synthetic data
+
+There is obviously natural variation in stratigraphy that is variably captured by a constant sampling interval. In addition, there are sampling errors such as uncertain datum, incomplete recovery and compaction. We will generate some realizations assuming that all layer boundaries have a standard deviation in depth of `10` centimeters and that `V` concentration varies related to the original value plus Gaussian noise related to a core-level variance parameter. 
+
+```{r}
+# assume variation in bottom depth amounts to a standard deviation of about 10% 1m core thickness
+# i.e. that normal curve centered at the boundary between 100cm layers has SD of 10cm
+horizons(pocmaj2and6)$layer_sd <- 10
+```
+
+To simulate we use the _aqp_ method `permute_profile`. We use `profileApply` to iterate over cores, and `aqp::union` to combine the `100` realizations we generate for each of the four input profiles.
+
+```{r}
+# random number seed
+set.seed(1234)
+
+# iterate over cores, generate 100 realizations each, aqp::union result
+bigpocmaj <- aqp::union(profileApply(pocmaj2and6, function(p) {
+               # use a horizon-level field to produce geometric realizations
+               pp <- permute_profile(p, boundary.attr = "layer_sd")
+               
+               # naive simulation of varying V values
+               #  - core-specific standard deviation rounded base10 logarithm 
+               #  - value cannot be negative [snaps to zero]
+               pp$V <- pmax(0, pp$V + 
+                              rnorm(nrow(pp), mean = 0, sd = 10^round(log10(pp$sd_V))))
+               
+               # create a unique profile ID
+               profile_id(pp) <- paste0(unique(p$core), profile_id(pp))
+               return(pp)
+             }))
+```
+
+Note that this is a relatively naive way of simulating the property values, but also is perhaps reasonable considering the vertical granularity of observations in the Z dimension.
+ 
+## Inspecting the synthetic data
+
+```{r}
+# simulated 400 realizations
+#  4 profiles (2 cores, 0-2m and 0-6m case), 100 times each
+length(bigpocmaj)
+```
+
+```{r}
+# extract horizons tbl_df
+h <- horizons(bigpocmaj)
+
+# denormalize site-level core variable to horizon
+h$core <- denormalize(bigpocmaj, "core")
+
+# create factor levels for combined plots from multiple data sources
+littlebig <- rbind(data.frame(pocmaj = "S", h[,horizonNames(pocmaj)]),
+                   data.frame(pocmaj = "O",  horizons(pocmaj)))
+
+# set up colors and labels
+cbPalette <- c("#009E73", "#E69F00")
+cbLabels <- c(sprintf("Median data & density (n = %s, bw = 5)", sum(!is.na(pocmaj$V))), 
+              sprintf("Synthetic data (n = %s, bins = 100)", sum(!is.na(bigpocmaj$V))))
+
+# plot
+ggplot(littlebig, aes(x = V, after_stat(density),
+                      color = factor(pocmaj), fill = factor(pocmaj))) + 
+  geom_histogram(data = filter(littlebig, pocmaj == "S"), bins = 100) +
+  geom_density(data = filter(littlebig, pocmaj == "O"), aes(x = V, fill = NULL), bw = 5) +
+  geom_point(data = filter(littlebig, pocmaj == "O"), aes(x = V, y = 0)) +
+  labs(title = "Median v.s. Synthetic bigpocmaj data\nVanadium by pXRF",
+       x = "Vanadium (V), pXRF", y = "Density", color = "Legend", fill = "Legend") +
+  scale_fill_manual(values = cbPalette, labels = cbLabels) +
+  scale_color_manual(values = cbPalette, labels = cbLabels) +
+  theme_bw()
+```
+
+We see bi-modal patterns exhibited in the layer medians are reflected and fleshed out in our simulated data `bigpocmaj`. Notice the extreme values at edges of the empirical distribution -- which are _extrapolations_ beyond the range observed in the input data. 
+
+## Compare percentiles
+
+```{r}
+# raw v.s. median (analyte 1:1 with layer) v.s. synthetic
+rbind(tibble(Source = "Raw",       Q = t(round(quantile(pocmaj_raw$V)))),
+      tibble(Source = "Median",    Q = t(round(quantile(pocmaj2and6$V)))),
+      tibble(Source = "Synthetic", Q = t(round(quantile(bigpocmaj$V)))))
+```
+
+Note that the `median()`-based summary by layer "tamps" down the more extreme values from the raw data. However, the synthetic distribution captures the original range _and then some_. This is because we are "permuting" or "perturbing" Vanadium values using core-level variance parameters and assumptions of normality.
+
+A maximum value of `r round(max(bigpocmaj$V))` pXRF is obtained in the synthetic sample -- which is nearly 30 pXRF greater than the highest median, and about 20 pXRF greater than the highest observed raw value. For estimation of extrema rather than central tendency above approaches would need to be adjusted, but this is fine for this demonstration. It looks reasonably convincing when you compare to the density plot -- though there really is just very little input data in this demo.
+
+```{r}
+# use aqp::slab to calculate quantiles of V for 10cm "slabs" grouped by core
+#  this is layer-level data result in a data.frame
+hbpp <- slab(bigpocmaj, core ~ V, slab.structure = 10)
+hbpp <- hbpp[complete.cases(hbpp),]
+
+# small jitter to prevent overplotting of medians
+hbpp$p.q50 <- jitter(hbpp$p.q50, amount = 1)
+
+# set up colors
+cbPalette <- c("#009E73", "#E69F00", "#cc79a7", "#0072b2")
+
+# plot
+ggplot(hbpp, aes(x = V, y = top)) + 
+       scale_y_reverse() +
+       labs(title = "Synthetic `bigpocmaj` 10cm slab-wise median V [pXRF]\n w/ 0.05, 0.95 quantiles", 
+            x = "Vanadium (V), pXRF", y = "Depth, cm", color = "Legend") +
+       geom_path(data = hbpp, aes(x = p.q50, y = top, color = factor(core)), linetype = 2) +
+       geom_path(data = hbpp, aes(x = p.q5, y = top, color = factor(core)), linetype = 3) + 
+       geom_path(data = hbpp, aes(x = p.q95, y = top, color = factor(core)), linetype = 3) +
+       scale_color_manual(values = cbPalette) + theme_bw()
+```
+
+<!--
+Here are two base **R** plots you can try on your own for comparison to _ggplot2_.
+
+```{r eval=FALSE}
+plot(y = bigpocmaj$top, x = bigpocmaj$V, type="n", ylim = c(max(pretty(bigpocmaj$top)), 0))
+plts <- lapply(aqp::split(bigpocmaj, f = "core"), function(bpp) {
+  # calculate depth quantiles
+  sbpp <- slab(bpp, ~ V, slab.structure = 10)
+
+  # calculate color
+  scol <- match(bpp$core, unique(bigpocmaj$core))
+  linetype <- ifelse(max(sbpp$top[!is.na(sbpp$p.q50)]) > 201, 3, 1)
+
+  lines(y = sbpp$top, x = sbpp$p.q5, col = scol, lwd = 1, lty = linetype)
+  lines(y = sbpp$top, x = sbpp$p.q50, col = scol, lwd = 2, lty = linetype)
+  lines(y = sbpp$top, x = sbpp$p.q95, col = scol, lwd = 1, lty = linetype)
+})
+
+# raw line plot
+plot(y = bigpocmaj$top, x = bigpocmaj$V, type="n", ylim = c(max(pretty(bigpocmaj$top)), 0))
+plts <- profileApply(bigpocmaj, function(p) {
+   lines(y = p$top, x = p$V, col = match(p$core, unique(bigpocmaj$core)))
+  })
+```
+-->
+
+```{r}
+# calculate site-level summary stats for each simulated core
+simulated.groups <- summarize_core(bigpocmaj, 600) %>% 
+  
+  # group by "core" (original profile ID)
+  aqp::group_by(core) %>%
+  
+  # summarize profile stats by original core group
+  aqp::summarize(mean_dwt_V = mean(dwt_V), 
+                 mean_median_V = mean(median_V), 
+                 mean_mean_V = mean(mean_V), 
+                 mean_sd_V = mean(sd_V),
+                 sd_dwt_V = sd(dwt_V), 
+                 sd_median_V = sd(median_V), 
+                 sd_mean_V = sd(mean_V), 
+                 sd_sd_V = sd(sd_V))
+# inspect
+head(simulated.groups)
+```
+
+So, we may not completely believe the values coming out of this naive simulation, but it shows the workflow for how you would summarize a larger amount of data. 
+
+Also possibly gives some ideas on how to begin comparing observed data to synthetic data. The output generally reflects the pattern we saw from the individual cores -- with a little more _fuzziness_.
+
+## Commentary
+
+The analysis shown above can be useful for demonstrating sensitivity to factors that affect scaling and aggregation of depth-dependent properties. In these lake cores factors could include: the depth range sampled, core recovery/compaction/fall-in, variation in analytes compared to "random noise" around a single centroid, use of individual v.s. group v.s. global variance parameters, and more.
+
+We assume standard deviations for core depth ranges are constant at 10 cm / 10% of a 1-meter slice. This produces a slight perturbation to the parent geometry without dramatically influencing the overall degree of aggregation. We further assume that the variation in the _analyte_ can be "perturbed" for a layer based on the original value for that layer plus a Gaussian offset related to the whole-core variation in analyte. 
+
+With the above assumptions it is tacitly accepted that there _is_ a single "mode" within a core -- clearly this is not always the case in nature, especially as depth increases  -- but the question of whether nature can be _approximated_ by a single mode will perennially be an interesting one. The above analysis is suggestive of two or more distinct modes of V value in layers: those with value ~70 pXRF, and those with about half that -- but that is just based on two unrelated cores.
+
+Ideally, simulation parameters would be based on _more than one core_ and would be _depth-dependent_.
+
+`permute_profile` only deals in Gaussian offsets of boundaries which means it is limited for generating profiles that exhibit more "natural" depth-skewed distributions or long-range-order types of variation in space. That means you shouldn't expect it to be able to generate the stuff that you might find in nature -- you have to sample that yourself! And then permute it :)! That said, in the future `permute_profile` will likely be expanded to support additional distributions, parameters, models or covariance structures that can be derived from experimental/observed data.
+
+## Next steps
+
+If you enjoyed this tutorial and want to expand on what you worked on here, you could try modifying the code to explore Calcium (`Ca`) or Titanium (`Ti`) values instead of Vanadium (`V`). Dewey's  [tutorial](https://fishandwhistle.net/post/2017/using-the-tidyverse-to-wrangle-core-data/) where this dataset came from has tips on using facets to plot multiple analytes etc. Also you can adjust the layer boundary standard deviation size or number of realizations (currently `100`) per profile. You could also try and load your own datasets into this routine and modify it for your own use. I will caution you about naive assumptions of normality and independence one last time, though.
+
+If discussion about identification of similar layers within depth-stratified data intrigues you, functions in _aqp_ such as `generalize_hz`, `hzTransitionProbabilies`, `genhzTableToAdjMat` and `mostLikelyHzSequence` may be useful. Identifying "depth modes" in soils data is essential to properly categorizing knowledge and generating accurate interpretations of properties. Dylan Beaudette has developed several routines for visualizing generalized horizon patterns such as `plotSoilRelationGraph` and plots that show simultaneous horizon transition probabilities for multiple generalized horizons across depth.
+
+[Here](https://ncss-tech.github.io/stats_for_soil_survey/chapters/2_data/genhz_homework.html) is a tutorial on initial steps for developing generalized horizon concepts for the Statistics for Soil Survey course. It needs to be expanded to demonstrate some of the graphical and modeling components.
+
+The [stratigraphic diagrams with tidypaleo & ggplot2](https://fishandwhistle.net/post/2018/stratigraphic-diagrams-with-tidypaleo-ggplot2/) tutorial from Dewey has some great paleolimnology-depth-dendrograms that are getting at the same fundamental "depth mode" concepts -- this might be worth exploring especially in the context of `aqp::slice` and `aqp::slab`. It also would be helpful if you are interested in expanding the plots in this tutorial to show multiple analytes.

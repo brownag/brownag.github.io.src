@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tibble on humus.rocks - soil is life on the rocks</title>
+    <link>/categories/tibble/</link>
+    <description>Recent content in tibble on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 16 Aug 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/tibble/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Exploring the tidyverse, lakes, synthetic data, and tibble-SoilProfileCollections</title>
+      <link>/post/2020/08/16/exploring-tibble-lakes-aqp-tidyverse/</link>
+      <pubDate>Sun, 16 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/08/16/exploring-tibble-lakes-aqp-tidyverse/</guid>
+      <description>In this brief tutorial, we will be using the aqp and tidyverse R packages for wrangling stratified environmental data from lake cores.
+The sample lake core data from Dewey Dunnington (paleolimbot on GitHub) are pretty “typical” of stratified environmental data that you might have kicking around on your hard drive. It also has a lot of “information” depth despite its relatively small size – which you will see shortly.</description>
+    </item>
+    
+  </channel>
+</rss>
