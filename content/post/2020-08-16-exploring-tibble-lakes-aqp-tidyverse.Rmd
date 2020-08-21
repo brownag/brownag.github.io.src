@@ -269,7 +269,7 @@ ggplot(littlebig, aes(x = V, after_stat(density),
   theme_bw()
 ```
 
-We see bi-modal patterns exhibited in the layer medians are reflected and fleshed out in our simulated data `bigpocmaj`. Notice the extreme values at edges of the empirical distribution -- which are _extrapolations_ beyond the range observed in the input data. 
+We see bi-modal patterns exhibited in the layer medians are reflected and fleshed out in our simulated data `bigpocmaj`. Notice the extreme values at edges of the empirical distribution -- which are _extrapolations_ beyond the range observed in the input data. The inclusion of the mixture of 2 and 6-meter deep profiles concentrates density in the range of distribution found in the upper depth portion of the profiles.
 
 ## Grouped Profile Plot
 
