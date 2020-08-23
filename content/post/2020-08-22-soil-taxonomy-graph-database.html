@@ -12,7 +12,7 @@ tags: [demonstrations, soil taxonomy]
 
 <p>For several years I have dreamt of ontologies and directed graph structures for representation of the logic in Soil Taxonomy. The express purpose of such work is that computer-aided taxonomy is “easier,” less prone to error, and enables <em>more powerful</em> reasoning about inherently abstract – but reasonably well-defined – concepts.</p>
 <p>As an undergraduate in Dr. Schulthess’ soils classes at UCONN – the “graphy-ness” of Soil Taxonomy became apparent to me. I was perhaps “prepared” to see some of these patterns, but they were also revealed by careful explanation in class and in my work with the local NRCS MLRA office. I went on to cultivate that knowledge with soils coursework at UCDavis with Dr. Southard. Since then, I have found Soil Taxonomy useful as a scaffold for my learning about soils as a Soil Scientist. I feel I can now work to push our questions and the rigor we apply to a whole new level.</p>
-<p>It is hard to conceive of what that a system for traversing Soil Taxonomy logic will offer. As the taxonomy has grown more complex, there have been calls to simplify and justify various criteria. These efforts must be undertaken in some cases – but they should be informed by the best available analysis – one that leverages the logical structure of the Keys.</p>
+<p>It is hard to conceive of what a system for traversing Soil Taxonomy logic will offer. As the taxonomy has grown more complex, there have been calls to simplify and justify various criteria. These efforts must be undertaken in some cases – but they should be informed by the best available analysis – one that leverages the logical structure of the Keys.</p>
 <div align="center">
 <img src="/post/2020-08-22-soil-taxonomy-graph-database_files/soiltaxonomy_graph.png" style="width:75.0%" />
 <p>
@@ -26,7 +26,7 @@ All 3082 subgroup-to-order level taxa in the 12th Edition Keys to <strong>Soil T
 <li><strong>KSTPreceding - “preceding taxa” app</strong>: <a href="http://brownag.shinyapps.io/KSTPreceding" class="uri">http://brownag.shinyapps.io/KSTPreceding</a></li>
 </ul>
 <p>These apps are alpha versions of “widgets” that expose the “parent-child” relationships implied by our hierarchical taxonomic system for soils in the U.S. The apps were intended to make people “think” about their changes to the fundamental structure and logic of the Keys.</p>
-<p>For this new work, I will be using the <em>Neo4j</em> platform to begin more rigorously describing <em>relationships</em> between taxa. I will continue to work with taxa at the subgroup level or higher that form the backbone of taxonomy. Many of these principles will further apply to keys applied at lower (family/series/phase) levels. If you are interested in family and series concepts, the <em>ncss-tech</em> <a href="https://github.com/ncss-tech/SoilTaxonomy">SoilTaxonomy</a> repository will likely be of interest. Some of the R-based tools and ideas from there may be used in this work – depending on the capabilities of <code>Neo4j</code>-specific <strong>R</strong> tools – and it is likely that the static output from traversing the <em>Neo4j</em> database will resemble some of the data stored there.</p>
+<p>For this new work, I will be using the <em>Neo4j</em> platform to begin more rigorously describing <em>relationships</em> between taxa. I will continue to work with taxa at the subgroup level or higher that form the backbone of taxonomy. Many of these principles will further apply to keys applied at lower (family/series/phase) levels. If you are interested in family and series concepts, the <em>ncss-tech</em> <a href="https://github.com/ncss-tech/SoilTaxonomy">SoilTaxonomy</a> repository will likely be of interest. Some of the R-based tools and ideas from there may be used in this work – depending on the capabilities of <em>Neo4j</em>-specific <strong>R</strong> tools – and it is likely that the static output from traversing the <em>Neo4j</em> database will resemble some of the data stored there.</p>
 <div id="why-neo4j" class="section level2">
 <h2>Why <em>Neo4j</em>?</h2>
 <p>There are many reasons for choosing <em>Neo4j</em> out of the graph platforms currently available. It is an industry leader, free, plays nice with R, has a lovely IDE and visualization tools, it is wicked fast and scales to multiple cores, the cloud and more. If you want to read more about <em>Neo4j</em> check out some of these resources.</p>
@@ -38,7 +38,7 @@ All 3082 subgroup-to-order level taxa in the 12th Edition Keys to <strong>Soil T
 </div>
 <div id="why-cypher" class="section level2">
 <h2>Why <em>Cypher</em>?</h2>
-<p>The query language that I will be using is <em>Cypher</em>. <em>Cypher</em> is an open-source declarative language originally developed for <em>Neo4j</em> that has gained a foothold in the market. In fact it may be the best positioned for meeting the upcoming Graph Query Language Standard.</p>
+<p>The query language that I will be using is <em>Cypher</em>. <em>Cypher</em> is an open-source declarative language originally developed for <em>Neo4j</em> that has gained a foothold in the graph platform market. In fact it may be the best positioned for meeting the upcoming Graph Query Language Standard.</p>
 <ul>
 <li><strong>Cypher Query Language</strong>: <a href="https://neo4j.com/developer/cypher/" class="uri">https://neo4j.com/developer/cypher/</a></li>
 <li><strong>What is openCypher?</strong>: <a href="https://www.opencypher.org/" class="uri">https://www.opencypher.org/</a></li>
@@ -90,7 +90,7 @@ service neo4j status</code></pre>
 </div>
 <div id="future-directions" class="section level2">
 <h2>Future directions</h2>
-<p>I have developed a basic API leveraging the capabilities of <code>Neo4j</code> under-the-hood – this will be the topic of the next blog post.</p>
+<p>I have developed a basic API leveraging the capabilities of <em>Neo4j</em> under-the-hood – this will be the topic of the next blog post.</p>
 <p>I intend to dramatically expand semantic capabilities of this graph database using expanded REGEX parsing and new <strong>R</strong> scripts – currently there is only one relationship type – but once criteria are added there will be many new ways in which taxa begin to be “related.” Further, I will be implementing a variety of path-length type demonstrations that will be relevant to tracing logical paths to specific endpoints.</p>
 <p>This platform opens up many possibilities for the Keys to Soil Taxonomy apps – which currently are using pre-computed taxonomic “trees.” I ultimately hope to be able to use these graph databases to “render” a variety of types of static output as JSON – either on the fly via Web APIs in response to unique constraints or pre-calculated for e.g. a Soil Taxonomy mobile app that does not rely on a persistent internet connection.</p>
 <p>I’m going to spend a few days in the High Country to clear my head … hopefully briefly escape the heat and smoke we have here in CA – but then I will be following up with more blogs on this topic!</p>
@@ -103,5 +103,6 @@ service neo4j status</code></pre>
 <li><p><strong>Graph Databases – free eBook from O’Reilly</strong>: <a href="https://graphdatabases.com/" class="uri">https://graphdatabases.com/</a></p></li>
 <li><p><strong>brownag/ncss-standards</strong>: <a href="https://github.com/brownag/ncss-standards" class="uri">https://github.com/brownag/ncss-standards</a></p></li>
 <li><p><strong>ncss-tech/SoilTaxonomy</strong>: <a href="https://github.com/ncss-tech/SoilTaxonomy" class="uri">https://github.com/ncss-tech/SoilTaxonomy</a></p></li>
+<li><p><strong>Keys to Soil Taxonomy - NRCS Soils</strong>: <a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/class/?cid=nrcs142p2_053580" class="uri">https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/class/?cid=nrcs142p2_053580</a></p></li>
 </ul>
 </div>

@@ -11,7 +11,7 @@ For several years I have dreamt of ontologies and directed graph structures for 
 
 As an undergraduate in Dr. Schulthess' soils classes at UCONN -- the "graphy-ness" of Soil Taxonomy became apparent to me. I was perhaps "prepared" to see some of these patterns, but they were also revealed by careful explanation in class and in my work with the local NRCS MLRA office. I went on to cultivate that knowledge with soils coursework at UCDavis with Dr. Southard. Since then, I have found Soil Taxonomy useful as a scaffold for my learning about soils as a Soil Scientist. I feel I can now work to push our questions and the rigor we apply to a whole new level. 
 
-It is hard to conceive of what that a system for traversing Soil Taxonomy logic will offer. As the taxonomy has grown more complex, there have been calls to simplify and justify various criteria. These efforts must be undertaken in some cases -- but they should be informed by the best available analysis -- one that leverages the logical structure of the Keys.
+It is hard to conceive of what a system for traversing Soil Taxonomy logic will offer. As the taxonomy has grown more complex, there have been calls to simplify and justify various criteria. These efforts must be undertaken in some cases -- but they should be informed by the best available analysis -- one that leverages the logical structure of the Keys.
 
 <div align="center">![](/post/2020-08-22-soil-taxonomy-graph-database_files/soiltaxonomy_graph.png){width=75% height=75%'}
 <p>
@@ -28,7 +28,7 @@ This blog post is one way of me communicating ideas that mostly live unspoken in
 
 These apps are alpha versions of "widgets" that expose the "parent-child" relationships implied by our hierarchical taxonomic system for soils in the U.S. The apps were intended to make people "think" about their changes to the fundamental structure and logic of the Keys.
 
-For this new work, I will be using the _Neo4j_ platform to begin more rigorously describing _relationships_ between taxa. I will continue to work with taxa at the subgroup level or higher that form the backbone of taxonomy. Many of these principles will further apply to keys applied at lower (family/series/phase) levels. If you are interested in family and series concepts, the _ncss-tech_ [SoilTaxonomy](https://github.com/ncss-tech/SoilTaxonomy) repository will likely be of interest. Some of the R-based tools and ideas from there may be used in this work -- depending on the capabilities of `Neo4j`-specific **R** tools -- and it is likely that the static output from traversing the _Neo4j_ database will resemble some of the data stored there.
+For this new work, I will be using the _Neo4j_ platform to begin more rigorously describing _relationships_ between taxa. I will continue to work with taxa at the subgroup level or higher that form the backbone of taxonomy. Many of these principles will further apply to keys applied at lower (family/series/phase) levels. If you are interested in family and series concepts, the _ncss-tech_ [SoilTaxonomy](https://github.com/ncss-tech/SoilTaxonomy) repository will likely be of interest. Some of the R-based tools and ideas from there may be used in this work -- depending on the capabilities of _Neo4j_-specific **R** tools -- and it is likely that the static output from traversing the _Neo4j_ database will resemble some of the data stored there.
 
 ## Why _Neo4j_?
 
@@ -41,7 +41,7 @@ There are many reasons for choosing _Neo4j_ out of the graph platforms currently
 
 ## Why _Cypher_?
 
-The query language that I will be using is _Cypher_. _Cypher_ is an open-source declarative language originally developed for _Neo4j_ that has gained a foothold in the market. In fact it may be the best positioned for meeting the upcoming Graph Query Language Standard.
+The query language that I will be using is _Cypher_. _Cypher_ is an open-source declarative language originally developed for _Neo4j_ that has gained a foothold in the graph platform market. In fact it may be the best positioned for meeting the upcoming Graph Query Language Standard.
 
  * **Cypher Query Language**: https://neo4j.com/developer/cypher/
  * **What is openCypher?**: https://www.opencypher.org/
@@ -113,7 +113,7 @@ service neo4j status
 
 ## Future directions
 
-I have developed a basic API leveraging the capabilities of `Neo4j` under-the-hood -- this will be the topic of the next blog post. 
+I have developed a basic API leveraging the capabilities of _Neo4j_ under-the-hood -- this will be the topic of the next blog post. 
 
 I intend to dramatically expand semantic capabilities of this graph database using expanded REGEX parsing and new **R** scripts -- currently there is only one relationship type -- but once criteria are added there will be many new ways in which taxa begin to be "related." Further, I will be implementing a variety of path-length type demonstrations that will be relevant to tracing logical paths to specific endpoints.
 
@@ -130,3 +130,5 @@ I'm going to spend a few days in the High Country to clear my head ... hopefully
 
 * **brownag/ncss-standards**: https://github.com/brownag/ncss-standards
 * **ncss-tech/SoilTaxonomy**: https://github.com/ncss-tech/SoilTaxonomy
+
+* **Keys to Soil Taxonomy - NRCS Soils**: https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/class/?cid=nrcs142p2_053580
