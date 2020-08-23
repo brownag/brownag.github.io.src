@@ -6,10 +6,20 @@
     <description>Recent content in soil taxonomy on humus.rocks - soil is life on the rocks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 13 Jul 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Aug 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/soil-taxonomy/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>A Soil Taxonomy Graph Database with Neo4j and Cypher</title>
+      <link>/post/2020/08/22/soil-taxonomy-graph-database/</link>
+      <pubDate>Sat, 22 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/08/22/soil-taxonomy-graph-database/</guid>
+      <description>For several years I have dreamt of ontologies and directed graph structures for representation of the logic in Soil Taxonomy. The express purpose of such work is that computer-aided taxonomy is “easier,” less prone to error, and enables more powerful reasoning about inherently abstract – but reasonably well-defined – concepts.
+As an undergraduate in Dr. Schulthess’ soils classes at UCONN – the “graphy-ness” of Soil Taxonomy became apparent to me.</description>
+    </item>
     
     <item>
       <title>Estimations of Soil Depth with aqp</title>

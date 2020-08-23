@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>soil taxonomy on humus.rocks - soil is life on the rocks</title>
+    <link>/categories/soil-taxonomy/</link>
+    <description>Recent content in soil taxonomy on humus.rocks - soil is life on the rocks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 23 Aug 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/soil-taxonomy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Soil Taxonomy Graph Database with neo4j and cypher</title>
+      <link>/post/2020/08/23/soil-taxonomy-graph-database/</link>
+      <pubDate>Sun, 23 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/08/23/soil-taxonomy-graph-database/</guid>
+      <description>  MATCH (taxn:Taxon { title: &amp;#39;TypicHumixerepts&amp;#39; })-[:CHILD_OF]-(prnt)-[:CHILD_OF]-(sibs) WHERE sibs.taxlevel = taxn.taxlevel RETURN [prnt,sibs] </description>
+    </item>
+    
+  </channel>
+</rss>

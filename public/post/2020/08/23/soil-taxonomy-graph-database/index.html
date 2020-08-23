@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Soil Taxonomy Graph Database with Neo4j and Cypher | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">Soil Taxonomy Graph Database with Neo4j and Cypher</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/08/23</span></h3>
+<p class="terms">
+  
+  
+  Categories: 
+  <a href="/categories/neo4j">Neo4j</a> 
+  <a href="/categories/cypher">Cypher</a> 
+  <a href="/categories/nosql">NoSQL</a> 
+  <a href="/categories/r">R</a> 
+  
+  
+  
+  Tags: 
+  <a href="/tags/demonstrations">demonstrations</a> 
+  <a href="/tags/soil-taxonomy">soil taxonomy</a> 
+  <a href="/tags/digitalocean">DigitalOcean</a> 
+  
+  
+</p>
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>For years now I have dreamt of ontologies and graph databases for representation of the logic in Soil Taxonomy.</p>
+<p>Below are some new avenues I have been exploring using my parsed database of taxonomic information that I created for the Keys to Soil Taxonomy Shiny Apps (<a href="http://brownag.shinyapps.io/KSTLookup" class="uri">http://brownag.shinyapps.io/KSTLookup</a>; <a href="http://brownag.shinyapps.io/KSTPreceding" class="uri">http://brownag.shinyapps.io/KSTPreceding</a>)</p>
+<p>For this new work, I will be using the <em>Neo4j</em> platform. There are many reasons for this – it is an industry leader, free, plays nice with R, has a lovely IDE and visualization tools, and more. If you want to read more about <em>Neo4j</em>, check out some of these resources.</p>
+<div id="why-neo4j" class="section level2">
+<h2>Why Neo4j?</h2>
+<ul>
+<li><a href="https://neo4j.com/developer/graph-platform/" class="uri">https://neo4j.com/developer/graph-platform/</a></li>
+<li><a href="https://neo4j.com/developer/r/#neo4j-r" class="uri">https://neo4j.com/developer/r/#neo4j-r</a></li>
+</ul>
+<p>The query language that I will be using is <em>Cypher</em>. <em>Cypher</em> is a declarative query language originally developed for <em>Neo4j</em> that has gained a foothold as one of the major choices out there. It may be the best positioned for meeting the upcoming Graph Query Language Standard and it is open-source.</p>
+</div>
+<div id="why-cypher" class="section level2">
+<h2>Why Cypher?</h2>
+<ul>
+<li><a href="https://neo4j.com/developer/cypher/" class="uri">https://neo4j.com/developer/cypher/</a></li>
+<li><a href="https://www.opencypher.org/" class="uri">https://www.opencypher.org/</a></li>
+<li><a href="https://www.gqlstandards.org/what-is-a-gql-standard" class="uri">https://www.gqlstandards.org/what-is-a-gql-standard</a></li>
+</ul>
+<p>Here is a a sample <em>Cypher</em> query that is be run against my database for demonstration.</p>
+<p>I deliberately wrote this query to illustrate some features of Cypher. <code>MATCH</code> is similar to SQL <code>SELECT</code>, but we have the option to deal with both label and property level values. We create new objects whose relationships and data we can reference through the rest of the query.</p>
+<pre><code>MATCH (taxn:Taxon { title: &#39;Typic Humixerepts&#39; })-[:CHILD_OF]-(prnt)-[:CHILD_OF]-(sibs) 
+WHERE sibs.taxlevel = taxn.taxlevel 
+RETURN [prnt, sibs]</code></pre>
+<div class="figure">
+<img src="/post/2020-08-23-soil-taxonomy-graph-database_files/humixerepts_greatgroup_graph.png" alt="" />
+<p class="caption">Viewing result of Cypher query in Neo4j: match node, get parent, get neighbors, filter siblings for a subgroup level taxon ‘Typic Humixerepts’</p>
+</div>
+<p>The “directionality” (the key feature of Graph Databases) is expressed through syntax reminiscent of ASCII art. I wrote the connections in the above query in a direction-ambivalent way (<code>-</code> v.s. <code>&lt;-</code> or <code>-&gt;</code>) to illustrate SQL-similarities with the option to use <code>WHERE</code> for constraints.</p>
+<p>Rather than removing nodes via constraint on the <code>taxlevel</code> property, I can make use of the directional relationship between child and parent <code>(prnt)&lt;-[:CHILD_OF]-(sibs)</code> to forgo the <code>WHERE</code> clause entirely.</p>
+<p>Another neat feature of <em>Cypher</em> is that concatenation of results is possible with the “Pythonic” (or <em>Haskell</em>-ic) syntax <code>[x, y]</code>. This I use to return both the parent node and the sibling nodes that are the same taxonomic level (“subgroup”) of the input.</p>
+<p>To do this somewhat more <em>Cypher</em>-y, we just specify known directions of the <code>CHILD_OF</code> relationship.</p>
+<pre><code>MATCH (taxn:Taxon { title: &#39;Typic Humixerepts&#39; })-[:CHILD_OF]-&gt;(prnt)&lt;-[:CHILD_OF]-(sibs)
+RETURN [prnt, sibs]</code></pre>
+<p>This is most explicitly written with both relationships to parent specified (i.e. <code>-&gt;(prnt)&lt;-</code>). Since the example taxa (“Typic Humixerepts”) only have a single relationship (<code>[:CHILD_OF]-&gt;(Humixerepts)</code>) it does not matter, but the same could not be said for a higher-level taxa that have children and a parent. Or if our graph included taxa below subgroup.</p>
+</div>
+<div id="getting-the-data-into-a-database" class="section level2">
+<h2>Getting the data into a database</h2>
+<p>I wrote an R script generate a <em>.cypher</em> file that I can read in to create all of the data and relationships in my <em>Neo4j</em> database. This file is generated using some reworking of the constants and unique taxon codes used in the Keys to Soil Taxonomy.</p>
+<p>Basically, each taxon needs to be set up individually. The order in which the nodes is relevant, as the interpreter will do some optimization of your input. I input 3000 individual <code>CREATE</code> statements which are ultimately optimized to a <em>single</em> dependent input.</p>
+<p>The first several auto-generated <em>Cypher</em> commands look like this:</p>
+<pre><code>CREATE (Soil:Taxonomy {title:&#39;Soil Taxonomy&#39;, edition:12})
+CREATE (Gelisols:Taxon {title:&#39;Gelisols&#39;, code:&#39;A&#39;, taxlevel:&#39;order&#39;, keypos:1, parent:&#39;Soil&#39;, parentcode:&#39;*&#39;})-[:CHILD_OF]-&gt;(Soil)
+CREATE (Histels:Taxon {title:&#39;Histels&#39;, code:&#39;AA&#39;, taxlevel:&#39;suborder&#39;, keypos:1, parent:&#39;Gelisols&#39;, parentcode:&#39;A&#39;})-[:CHILD_OF]-&gt;(Gelisols)
+CREATE (Turbels:Taxon {title:&#39;Turbels&#39;, code:&#39;AB&#39;, taxlevel:&#39;suborder&#39;, keypos:2, parent:&#39;Gelisols&#39;, parentcode:&#39;A&#39;})-[:CHILD_OF]-&gt;(Gelisols)
+CREATE (Orthels:Taxon {title:&#39;Orthels&#39;, code:&#39;AC&#39;, taxlevel:&#39;suborder&#39;, keypos:3, parent:&#39;Gelisols&#39;, parentcode:&#39;A&#39;})-[:CHILD_OF]-&gt;(Gelisols)
+...</code></pre>
+</div>
+<div id="visualizations" class="section level2">
+<h2>Visualizations</h2>
+</div>
+<div id="set-it-up-on-ubuntu" class="section level2">
+<h2>Set it up on Ubuntu</h2>
+<div class="figure">
+<img src="/post/2020-08-23-soil-taxonomy-graph-database_files/neo4j_digitalocean_server.png" alt="" />
+<p class="caption">Checking that the neo4j service is running on HedonisticLodging – my DigitalOcean cloud droplet</p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>Cypher refcard: <a href="https://neo4j.com/docs/cypher-refcard/current/" class="uri">https://neo4j.com/docs/cypher-refcard/current/</a></li>
+<li>Cypher manual: <a href="https://neo4j.com/docs/cypher-manual/current/introduction/" class="uri">https://neo4j.com/docs/cypher-manual/current/introduction/</a></li>
+<li>Graph Databases – free eBook from O’Reilly: <a href="https://graphdatabases.com/" class="uri">https://graphdatabases.com/</a></li>
+</ul>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+

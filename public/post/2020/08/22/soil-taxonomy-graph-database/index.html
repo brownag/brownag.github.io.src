@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>A Soil Taxonomy Graph Database with Neo4j and Cypher | humus.rocks - soil is life on the rocks</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <img src="/images/musick.jpg">
+<link href="/css/github.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h2><span class="title">A Soil Taxonomy Graph Database with Neo4j and Cypher</span></h2>
+<h3><span class="author">Andrew G. Brown</span>
+ | <span class="date">2020/08/22</span></h3>
+<p class="terms">
+  
+  
+  Categories: 
+  <a href="/categories/neo4j">Neo4j</a> 
+  <a href="/categories/cypher">Cypher</a> 
+  <a href="/categories/nosql">NoSQL</a> 
+  <a href="/categories/r">R</a> 
+  
+  
+  
+  Tags: 
+  <a href="/tags/demonstrations">demonstrations</a> 
+  <a href="/tags/soil-taxonomy">soil taxonomy</a> 
+  
+  
+</p>
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>For several years I have dreamt of ontologies and directed graph structures for representation of the logic in Soil Taxonomy. The express purpose of such work is that computer-aided taxonomy is “easier,” less prone to error, and enables <em>more powerful</em> reasoning about inherently abstract – but reasonably well-defined – concepts.</p>
+<p>As an undergraduate in Dr. Schulthess’ soils classes at UCONN – the “graphy-ness” of Soil Taxonomy became apparent to me. I was perhaps “prepared” to see some of these patterns, but they were also revealed by careful explanation in class and in my work with the local NRCS MLRA office. I went on to cultivate that knowledge with soils coursework at UCDavis with Dr. Southard. Since then, I have found Soil Taxonomy useful as a scaffold for my learning about soils as a Soil Scientist. I feel I can now work to push our questions and the rigor we apply to a whole new level.</p>
+<p>It is hard to conceive of what that a system for traversing Soil Taxonomy logic will offer. As the taxonomy has grown more complex, there have been calls to simplify and justify various criteria. These efforts must be undertaken in some cases – but they should be informed by the best available analysis – one that leverages the logical structure of the Keys.</p>
+<div align="center">
+<img src="/post/2020-08-22-soil-taxonomy-graph-database_files/soiltaxonomy_graph.png" style="width:75.0%" />
+<p>
+<p><em>“Relationships are data, and data are beautiful.”</em></p>
+All 3082 subgroup-to-order level taxa in the 12th Edition Keys to <strong>Soil Taxonomy</strong>, with Soil Orders rooted to a common “Soil” node. Visualized with <strong>Neo4j Bloom</strong>.
+</p>
+</div>
+<p>This blog post is one way of me communicating ideas that mostly live unspoken in my head. Also, it is an opportunity for “synergy” by fusing my recent work with existing technologies. Clearly, it is a continuation on the soil taxonomy topics that I love. I have been exploring further use of my REGEX parsed database of U.S. soil taxonomic information – gleaned from the official version of the Keys (12th edition). After addition of the Spanish language version of the “criteria” app, all of the kinks are worked out in the mapping of taxa and criteria to codes. For those who don’t know, I created this “database” a couple months ago for the Keys to Soil Taxonomy Shiny Apps. There are several prior blog posts about it, but here are the links to the apps for you to play with:</p>
+<ul>
+<li><strong>KSTLookup - “criteria” app</strong>: <a href="http://brownag.shinyapps.io/KSTLookup" class="uri">http://brownag.shinyapps.io/KSTLookup</a></li>
+<li><strong>KSTPreceding - “preceding taxa” app</strong>: <a href="http://brownag.shinyapps.io/KSTPreceding" class="uri">http://brownag.shinyapps.io/KSTPreceding</a></li>
+</ul>
+<p>These apps are alpha versions of “widgets” that expose the “parent-child” relationships implied by our hierarchical taxonomic system for soils in the U.S. The apps were intended to make people “think” about their changes to the fundamental structure and logic of the Keys.</p>
+<p>For this new work, I will be using the <em>Neo4j</em> platform to begin more rigorously describing <em>relationships</em> between taxa. I will continue to work with taxa at the subgroup level or higher that form the backbone of taxonomy. Many of these principles will further apply to keys applied at lower (family/series/phase) levels. If you are interested in family and series concepts, the <em>ncss-tech</em> <a href="https://github.com/ncss-tech/SoilTaxonomy">SoilTaxonomy</a> repository will likely be of interest. Some of the R-based tools and ideas from there may be used in this work – depending on the capabilities of <code>Neo4j</code>-specific <strong>R</strong> tools – and it is likely that the static output from traversing the <em>Neo4j</em> database will resemble some of the data stored there.</p>
+<div id="why-neo4j" class="section level2">
+<h2>Why <em>Neo4j</em>?</h2>
+<p>There are many reasons for choosing <em>Neo4j</em> out of the graph platforms currently available. It is an industry leader, free, plays nice with R, has a lovely IDE and visualization tools, it is wicked fast and scales to multiple cores, the cloud and more. If you want to read more about <em>Neo4j</em> check out some of these resources.</p>
+<ul>
+<li><strong>Neo4j Graph Platform</strong>: <a href="https://neo4j.com/developer/graph-platform/" class="uri">https://neo4j.com/developer/graph-platform/</a></li>
+<li><strong>Neo4j for R Developers and Data Scientists</strong>: <a href="https://neo4j.com/developer/r/#neo4j-r" class="uri">https://neo4j.com/developer/r/#neo4j-r</a></li>
+</ul>
+<p><img src="/post/2020-08-22-soil-taxonomy-graph-database_files/soiltaxonomy_database_neo4j.png" /></p>
+</div>
+<div id="why-cypher" class="section level2">
+<h2>Why <em>Cypher</em>?</h2>
+<p>The query language that I will be using is <em>Cypher</em>. <em>Cypher</em> is an open-source declarative language originally developed for <em>Neo4j</em> that has gained a foothold in the market. In fact it may be the best positioned for meeting the upcoming Graph Query Language Standard.</p>
+<ul>
+<li><strong>Cypher Query Language</strong>: <a href="https://neo4j.com/developer/cypher/" class="uri">https://neo4j.com/developer/cypher/</a></li>
+<li><strong>What is openCypher?</strong>: <a href="https://www.opencypher.org/" class="uri">https://www.opencypher.org/</a></li>
+<li><strong>What is in a Graph Query Language Standard?</strong>: <a href="https://www.gqlstandards.org/what-is-a-gql-standard" class="uri">https://www.gqlstandards.org/what-is-a-gql-standard</a></li>
+</ul>
+<div id="trying-cypher-out" class="section level3">
+<h3>Trying <em>Cypher</em> out</h3>
+<p>Here is a a sample <em>Cypher</em> query for taxa related to “Typic Humixerepts” that is run against my database for demonstration.</p>
+<pre><code>MATCH (taxn:Taxon { title: &#39;Typic Humixerepts&#39; })-[:CHILD_OF]-(prnt)-[:CHILD_OF]-(sibs) 
+WHERE sibs.taxlevel = taxn.taxlevel 
+RETURN [prnt, sibs]</code></pre>
+<p>I deliberately wrote this query to illustrate some features of <em>Cypher</em>. <code>MATCH</code> is similar to SQL <code>SELECT</code>, but we have the option to deal with both <em>label</em>- and <em>property</em>-level values. We create new objects whose <em>relationships</em> and <em>properties</em> we can reference throughout the rest of the query.</p>
+<p><img src="/post/2020-08-22-soil-taxonomy-graph-database_files/humixerepts_greatgroup_graph.png" />
+The “directionality” (the key feature of Graph Databases) of relationships is expressed through syntax like <strong>R</strong> assignment operators. I wrote the connections in the above query in a direction-ambivalent way (<code>-</code> v.s. <code>&lt;-</code> or <code>-&gt;</code>) to illustrate SQL-similarities with the option to use <code>WHERE</code> for constraints.</p>
+<p>Rather than removing nodes via constraint on the <code>taxlevel</code> property, I can make use of the directional relationship between child and parent <code>(prnt)&lt;-[:CHILD_OF]-(sibs)</code> to forgo the <code>WHERE</code> clause entirely.</p>
+<p>To do this somewhat more <em>Cypher</em>-y, we just specify known directions of the <code>CHILD_OF</code> relationship.</p>
+<pre><code>MATCH (taxn:Taxon { title: &#39;Typic Humixerepts&#39; })-[:CHILD_OF]-&gt;(prnt)&lt;-[:CHILD_OF]-(sibs)
+RETURN [prnt, sibs]</code></pre>
+<p>This is most explicitly written with both relationships to parent specified (i.e. <code>-&gt;(prnt)&lt;-</code>). Since the example taxa (“Typic Humixerepts”) only have a single relationship (<code>[:CHILD_OF]-&gt;(Humixerepts)</code>) it does not matter, but the same could not be said for a higher-level taxa that have children and a parent. Or if our graph included taxa below subgroup.</p>
+<p>A neat feature of <em>Cypher</em> is that you can concatenate results with the “Pythonic” (or <em>Haskell</em>-ic) syntax <code>[x, y]</code>. I use <code>[prnt, sibs]</code> to return both the parent (<code>prnt</code>) plus nodes that are the same taxonomic level “subgroup” (<code>sibs</code>) as the input (<code>taxn</code>).</p>
+</div>
+</div>
+<div id="getting-the-data-into-a-database" class="section level2">
+<h2>Getting the data into a database</h2>
+<p>I wrote an <strong>R</strong> script generate a <em>.cypher</em> file that I can read in to create all of the data and relationships in my <em>Neo4j</em> database. There is nothing terribly novel about the script itself – just concatenating togther character strings. This sequence of <em>Cypher</em> commands is generated using some reworking of the constants and unique taxon codes used in the Keys to Soil Taxonomy.</p>
+<p>The simplest way to do it is to set up relationships sequentially and individually. The order you create the nodes is relevant and interpreter will do some optimization of your input. I input ~3080 individual <code>CREATE</code> statements which are optimized to a <em>single</em> statement because of the <em>relationships</em> specified therein.</p>
+<p>The first several auto-generated <em>Cypher</em> commands look like this:</p>
+<pre><code>CREATE (Soil:Taxonomy {title:&#39;Soil Taxonomy&#39;, edition:12})
+CREATE (Gelisols:Taxon {title:&#39;Gelisols&#39;, code:&#39;A&#39;, taxlevel:&#39;order&#39;, keypos:1, parent:&#39;Soil&#39;, parentcode:&#39;*&#39;})-[:CHILD_OF]-&gt;(Soil)
+CREATE (Histels:Taxon {title:&#39;Histels&#39;, code:&#39;AA&#39;, taxlevel:&#39;suborder&#39;, keypos:1, parent:&#39;Gelisols&#39;, parentcode:&#39;A&#39;})-[:CHILD_OF]-&gt;(Gelisols)
+CREATE (Turbels:Taxon {title:&#39;Turbels&#39;, code:&#39;AB&#39;, taxlevel:&#39;suborder&#39;, keypos:2, parent:&#39;Gelisols&#39;, parentcode:&#39;A&#39;})-[:CHILD_OF]-&gt;(Gelisols)
+CREATE (Orthels:Taxon {title:&#39;Orthels&#39;, code:&#39;AC&#39;, taxlevel:&#39;suborder&#39;, keypos:3, parent:&#39;Gelisols&#39;, parentcode:&#39;A&#39;})-[:CHILD_OF]-&gt;(Gelisols)
+...</code></pre>
+</div>
+<div id="visualizations" class="section level2">
+<h2>Visualizations</h2>
+<p>Using <em>Neo4j Bloom</em>, one can quickly make renderings of large networks – interact with nodes and relationships – and generate a variety of useful output.</p>
+<p><img src="/post/2020-08-22-soil-taxonomy-graph-database_files/neo4j_bloom.png" /></p>
+</div>
+<div id="set-up-neo4j-server-on-ubuntu" class="section level2">
+<h2>Set up <em>neo4j</em> server on Ubuntu</h2>
+<p>Setting up a <em>Neo4j</em> server on Debian-based distributions is simple.</p>
+<pre><code>wget -O - http://debian.neo4j.org/neotechnology.gpg.key | apt-key add -
+echo &#39;deb http://debian.neo4j.org/repo stable/&#39; &gt; /etc/apt/sources.list.d/neo4j.list
+sudo apt update
+sudo apt install neo4j
+service neo4j status</code></pre>
+<p><img src="/post/2020-08-22-soil-taxonomy-graph-database_files/neo4j_digitalocean_server.png" /></p>
+</div>
+<div id="future-directions" class="section level2">
+<h2>Future directions</h2>
+<p>I have developed a basic API leveraging the capabilities of <code>Neo4j</code> under-the-hood – this will be the topic of the next blog post.</p>
+<p>I intend to dramatically expand semantic capabilities of this graph database using expanded REGEX parsing and new <strong>R</strong> scripts – currently there is only one relationship type – but once criteria are added there will be many new ways in which taxa begin to be “related.” Further, I will be implementing a variety of path-length type demonstrations that will be relevant to tracing logical paths to specific endpoints.</p>
+<p>This platform opens up many possibilities for the Keys to Soil Taxonomy apps – which currently are using pre-computed taxonomic “trees.” I ultimately hope to be able to use these graph databases to “render” a variety of types of static output as JSON – either on the fly via Web APIs in response to unique constraints or pre-calculated for e.g. a Soil Taxonomy mobile app that does not rely on a persistent internet connection.</p>
+<p>I’m going to spend a few days in the High Country to clear my head … hopefully briefly escape the heat and smoke we have here in CA – but then I will be following up with more blogs on this topic!</p>
+</div>
+<div id="references-source-further-reading" class="section level2">
+<h2>References, Source &amp; Further Reading</h2>
+<ul>
+<li><p><strong>Cypher refcard</strong>: <a href="https://neo4j.com/docs/cypher-refcard/current/" class="uri">https://neo4j.com/docs/cypher-refcard/current/</a></p></li>
+<li><p><strong>Cypher manual</strong>: <a href="https://neo4j.com/docs/cypher-manual/current/introduction/" class="uri">https://neo4j.com/docs/cypher-manual/current/introduction/</a></p></li>
+<li><p><strong>Graph Databases – free eBook from O’Reilly</strong>: <a href="https://graphdatabases.com/" class="uri">https://graphdatabases.com/</a></p></li>
+<li><p><strong>brownag/ncss-standards</strong>: <a href="https://github.com/brownag/ncss-standards" class="uri">https://github.com/brownag/ncss-standards</a></p></li>
+<li><p><strong>ncss-tech/SoilTaxonomy</strong>: <a href="https://github.com/ncss-tech/SoilTaxonomy" class="uri">https://github.com/ncss-tech/SoilTaxonomy</a></p></li>
+</ul>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script async src="//yihui.name/js/center-img.js"></script>
+
+<script src="/js/highlight.min.js"></script>
+<script src="/js/r.min.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+  
+  <hr/>
+  <p>Andrew G. Brown (<a href="https://humus.rocks">humus.rocks</a> | <a href="https://github.com/brownag">GitHub</a> | <a href="https://twitter.com/humus_rocks">Twitter</a>)</p>
+<p><a href="https://github.com/yihui/hugo-xmin">XMin Theme by Yihui Xie</a></p>
+
+  
+  </footer>
+  </body>
+</html>
+
