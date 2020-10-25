@@ -26,8 +26,7 @@ before_install:
  - export PATH="$HOME/hugo:$PATH"
 
 script:
- - Rscript -e 'if(!blogdown::hugo_available()) blogdown::install_hugo()'
- - Rscript -e 'blogdown::build_site()'
+ - "$HOME/hugo"
 
 deploy:
   provider: pages
