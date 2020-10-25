@@ -12,7 +12,7 @@ cache:
 directories:
   - $HOME/bin
 
-script:
+before_install:
  - wget https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5-latest-linux-x86_64.tar.gz
  - tar -xzf julia-1.5-latest-linux-x86_64.tar.gz
  - cp -r "$(find "." -maxdepth 2 -name "julia*" -type d | head -n 1)" "$HOME/julia"
@@ -24,6 +24,9 @@ script:
  - tar -xzf hugo_0.76.5_Linux-64bit.tar.gz
  - cp -r "$(find "." -maxdepth 2 -name "hugo*" -type d | head -n 1)" "$HOME/hugo"
  - export PATH="$HOME/hugo:$PATH"
+
+script:
+ - Rscript -e 'if(!blogdown::hugo_available()) blogdown::install_hugo()'
  - Rscript -e 'blogdown::build_site()'
 
 deploy:
