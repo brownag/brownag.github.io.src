@@ -24,7 +24,7 @@ script:
  - tar -xzf hugo_0.76.5_Linux-64bit.tar.gz
  - cp -r "$(find "." -maxdepth 2 -name "hugo*" -type d | head -n 1)" "$HOME/hugo"
  - export PATH="$HOME/hugo:$PATH"
- - hugo
+ - Rscript -e 'blogdown::build_site()'
 
 deploy:
   provider: pages
