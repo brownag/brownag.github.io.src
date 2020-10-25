@@ -13,10 +13,9 @@ directories:
   - $HOME/bin
 
 script:
-- curl -L https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5-latest-linux-x86_64.tar.gz -o "$HOME/Downloads/julia.tar.gz"
-- tar xzf "$HOME/Downloads/julia.tar.gz" -C "$HOME/Downloads"
-- cp -r "$(find "$HOME/Downloads" -maxdepth 2 -name "julia*" -type d | head -n 1)" "$HOME/julia"
-- rm -rf ~/Downloads/julia*
+- wget https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5-latest-linux-x86_64.tar.gz
+- tar -xzf julia-1.5-latest-linux-x86_64.tar.gz
+- cp -r "$(find "." -maxdepth 2 -name "julia*" -type d | head -n 1)" "$HOME/julia"
 - export PATH="$HOME/julia/bin:$PATH"
 - export R_LD_LIBRARY_PATH="$(R RHOME)/lib:$HOME/julia/lib/julia"
 - Rscript -e 'install.packages(c("devtools","blogdown","JuliaCall","aqp","soilDB","sharpshootR"))'
