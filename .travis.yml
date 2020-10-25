@@ -1,5 +1,9 @@
-language: r
-dist: xenial
+matrix:
+ include:
+   - language: r
+   - language: julia
+
+dist: focal
 latex: false
 
 branches:
@@ -13,17 +17,15 @@ directories:
   - $HOME/bin
 
 script:
-- Rscript -e 'install.packages(c("devtools","aqp","soilDB","sharpshootR"))'
-- Rscript -e 'devtools::install_github("ncss-tech/aqp", dependencies=FALSE)'
-- Rscript -e 'devtools::install_github("ncss-tech/soilDB", dependencies=FALSE)'
-- Rscript -e 'devtools::install_github("ncss-tech/sharpshootR", dependencies=FALSE)'
+- Rscript -e 'install.packages(c("devtools","blogdown","JuliaCall","aqp","soilDB","sharpshootR"))'
+- Rscript -e 'devtools::install_github(c("ncss-tech/aqp", "ncss-tech/soilDB", "ncss-tech/sharpshootR"), dependencies=FALSE)'
 - Rscript -e 'blogdown::install_hugo()'
 - Rscript -e 'blogdown::build_site()'
 
 deploy:
   provider: pages
   skip_cleanup: TRUE
-  github_token: $GITHUB_TOKEN
+  github_token: GITHUB_TOKEN
   keep_history: TRUE
   on:
     branch: master
