@@ -1,0 +1,374 @@
+---
+title: Riffing on the SoilProfileCollection
+author: Andrew G. Brown
+date: '2020-10-25'
+slug: riffing-on-the-soilprofilecollection
+categories:
+  - aqp
+  - SoilProfileCollection
+  - R
+  - Julia
+  - vctrs
+  - DataFrames
+tags: [demonstrations]
+---
+
+<script src="index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>Recently I developed two different riffs on the motif of the <em>aqp</em> <em>SoilProfileCollection</em>… Soil profiles are essentially cross-sections for a point, line or area on the land surface where distinct “layers” are defined by a top and bottom depth measurement. There is generally a many:one relationship between layers observed within a soil profile and the site-level information that identifies or summarizes that profile.</p>
+<div id="soilvctrs" class="section level3">
+<h3><a href="https://github.com/brownag/soilvctrs"><em>soilvctrs</em></a></h3>
+<p><em>soilvctrs</em> is an experimental <strong>R</strong> package to abstract geometric operations on stratified environmental data such as soil profile descriptions. Under the hood, <em>soilvctrs</em> uses <em>vctrs</em> for managing S3 class representations and data in an efficient vector based format. The primary goal of this package is to demonstrate concise soil-themed classes that “just work” with <em>tidyverse</em> principles. Since <em>dplyr</em> 1.0.0, <em>vctrs</em> is a main workhorse package in the <em>tidyverse</em> metapackage “ecosystem.”</p>
+<p>The current <em>soilvctrs</em> implementation represents parts of soil descriptions as S3 <code>vctrs::rcrd</code> objects: <code>soil_layer</code> and <code>soil_profile</code>.</p>
+<p>The beauty of record-style vectors is that despite supporting arbitrary hierarchical complexity they are able to be manipulated like any vector; notably: added as non-atomic columns in <code>tibble</code> and <code>data.frame</code> objects. <code>soil_profile</code> instances contain a <code>vctrs::list_of</code> <code>soil_layer</code> in accessible in <code>$profile</code> with length zero or more. The <code>soil_layer</code> and <code>soil_profile</code> are comprised of vector “fields” of length equal to number of horizons (in a profile) or number of profiles. <code>geom</code> fields are defined at both profile and layer levels.</p>
+<p>What has changed about <em>soilvctrs</em> most recently is that the geometry vectors that we were using from the <em>geovctrs</em> package by <a href="https://github.com/paleolimbot">paleolimbot</a> have been moved to the <em>wk</em> package. Some of the code in <em>soilvctrs</em> needs to be re-factored, but the changes are very minor. I have not yet published changes because I am re-evaluating certain structural aspects of the <em>soilvctrs</em> model; such as the <code>vctrs::list_of</code> for layers. While <em>cool</em>, it poses some limitations with larger data sets.</p>
+<p>Use of nested record objects containing geometry fields and the ability to directly manipulate geometric elements <em>outside</em> of a graphics device has exciting (still theoretical) implications for interactive profile plots, 2-dimensional profile descriptions and new algorithm design. In the former cases – graphics or summaries involving a small number of profiles – performance for large collections should not be a major concern.</p>
+<p>Here is a quick demonstration of incorporating <em>wk</em> vectors for geometric and graphical operations. I use the <em>SoilProfileCollection</em> <code>loafercreek</code> from the <em>soilDB</em> package for source data. I demonstrate a couple simple vector operations and allude to how they can be used for interactive/dynamic profile plots.</p>
+<pre class="r"><code># get these off github
+# remotes::install_github(c(&#39;paleolimbot/wk&#39;,
+#                           &#39;ncss-tech/aqp&#39;, 
+#                           &#39;ncss-tech/soilDB&#39;))
+
+library(vctrs)
+library(bench)
+library(wk)
+library(aqp, warn.conflicts = FALSE)</code></pre>
+<pre><code>## This is aqp 1.25</code></pre>
+<pre class="r"><code>library(soilDB)
+
+# get loafercreek data from soilDB (only thing we are using from there)
+data(loafercreek, package=&#39;soilDB&#39;)
+
+# add the wk_xy to the site table as a column
+loafercreek_xy &lt;- as_xy(site(loafercreek)[,c(&#39;x&#39;,&#39;y&#39;)])
+site(loafercreek)$wk_pnt &lt;- loafercreek_xy
+
+# make a rectangle for each horizons -- using no lists or iterations [fast]
+make_hz_wk_rct &lt;- function(p) {
+  h &lt;- horizons(p)
+  hzd &lt;- horizonDepths(p)
+  i &lt;- as.integer(as.factor(h[[idname(p)]]))
+  rct_df &lt;- data.frame(xmin = i - 0.5,
+                       ymin = -h[[hzd[1]]], # horizon top depth is -Z (Y)
+                       xmax = i + 0.5,
+                       ymax = -h[[hzd[2]]])
+  return(as_rct(rct_df))
+}
+
+# add &lt;wk_rct&gt; to the horizon table [fast]
+bench_time(loafercreek$wk_rct_hz &lt;- make_hz_wk_rct(loafercreek))</code></pre>
+<pre><code>## process    real 
+##  1.39ms  1.39ms</code></pre>
+<pre class="r"><code>head(horizons(loafercreek)[,c(&quot;phiid&quot;, &quot;wk_rct_hz&quot;)])</code></pre>
+<pre><code>##    phiid         wk_rct_hz
+## 1 579662 [0.5   0 1.5  -5]
+## 2 579661 [0.5  -5 1.5 -10]
+## 3 579660 [0.5 -10 1.5 -28]
+## 4 579659 [0.5 -28 1.5 -51]
+## 5 579658 [0.5 -51 1.5 -74]
+## 6 579657 [0.5 -74 1.5 -81]</code></pre>
+<pre class="r"><code># aqp plot method [fancy, many options]
+bench_time(plot(loafercreek[5:10,], axis.line.offset = -0.5))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre><code>## process    real 
+##    61ms  61.1ms</code></pre>
+<pre class="r"><code># geometric vectors have basic plot methods
+bench_time(plot(loafercreek$wk_pnt))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre><code>## process    real 
+##  57.7ms  57.8ms</code></pre>
+<pre class="r"><code># all loafercreek horizon rcts
+bench_time(plot(loafercreek$wk_rct_hz, col = loafercreek$soil_color))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-1-3.png" width="672" /></p>
+<pre><code>## process    real 
+##  47.2ms  47.7ms</code></pre>
+<pre class="r"><code># a few profiles of loafercreek horizon geometry
+plot(loafercreek[5:10,]$wk_rct_hz, col = loafercreek$soil_color)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-1-4.png" width="672" /></p>
+<pre class="r"><code># basic width-scaling function for horizon wk_rct plots [fast]
+# assumes 1 profile = 1 unit in width (X) dimension
+scale_rct_width &lt;- function(x, fct = 0.5) {
+  i &lt;- 1:length(x)
+  x &lt;- unclass(x)
+  mid &lt;- (x$xmin + x$xmax) / 2
+  x$xmin &lt;- mid - 0.5*fct
+  x$xmax &lt;- mid + 0.5*fct
+  new_wk_rct(x)
+}
+
+# scale a subset
+scl.loaf &lt;- loafercreek[5:10,]
+bench_time(scl.loaf$wk_rct_hz &lt;- scale_rct_width(scl.loaf$wk_rct_hz))</code></pre>
+<pre><code>## process    real 
+##   168µs   170µs</code></pre>
+<pre class="r"><code># first 10 loafercreek horizon geometry [now less cluttered]
+plot(scl.loaf$wk_rct_hz, col = loafercreek[5:10,]$soil_color)
+
+pad_rct &lt;- function(x, xpad = 0, ypad = 0) {
+  i &lt;- 1:length(x)
+  x &lt;- unclass(x)
+  # NB: negative Y == depth
+  x$xmin &lt;- x$xmin - xpad
+  x$ymin &lt;- x$ymin + ypad
+  x$xmax &lt;- x$xmax + xpad
+  x$ymax &lt;- x$ymax - ypad
+  new_wk_rct(x)
+}
+
+combine_rct &lt;- function(x, xpad = 0, ypad = 0) {
+  i &lt;- 1:length(x)
+  x &lt;- unclass(x)
+  # NB: negative Y == depth
+  x$xmin &lt;- min(x$xmin)
+  x$ymin &lt;- -min(-x$ymin)
+  x$xmax &lt;- max(x$xmax)
+  x$ymax &lt;- -max(-x$ymax)
+  new_wk_rct(x)
+}
+
+# &quot;highlight&quot; #6 profile&#39;s 4th horizon by &quot;combining&quot; rct geometry and over-plotting
+plot(scl.loaf$wk_rct_hz, col = scl.loaf$soil_color)
+
+# draw border
+border_p &lt;- pad_rct(combine_rct(scale_rct_width(loafercreek[6,]$wk_rct_hz)), 
+                    xpad = 0.1, ypad=5)
+plot(border_p, add = T, lwd=2)
+
+# highlight horizon
+highlight_hz &lt;- scale_rct_width(loafercreek[6,4]$wk_rct_hz)
+plot(pad_rct(highlight_hz, xpad = 0.05, ypad=2.5), 
+     add = T, col = rgb(1,1,0,0.666))
+
+# redraw lines
+plot(scl.loaf$wk_rct_hz, add = T)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-1-5.png" width="672" /></p>
+<pre class="r"><code># overplotting on aqp::plotSPC base requires inversion of the Y axis
+invert_y_rct &lt;- function(x) {
+  i &lt;- 1:length(x)
+  x &lt;- unclass(x)
+  # NB: negative Y == depth
+  x$ymin &lt;- -x$ymin
+  x$ymax &lt;- -x$ymax
+  new_wk_rct(x)
+}
+
+plotSPC(loafercreek[1:4,])
+plot(invert_y_rct(scale_rct_width(loafercreek[3,]$wk_rct_hz)), add = T, col=rgb(1,1,0,0.111))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-1-6.png" width="672" /></p>
+<p>Note: if this style of geometry were to be incorporated in the <em>SoilProfileCollection</em> the constructor would probably need to rebuild geometry (x axis) on <code>[</code> extraction, complicating the “simple” indexing above where rectangles are handled independently of the object. That is <code>loafercreek[3,]</code> would have <code>xmin=0.5</code>, <code>xmax=1.5</code>, not <code>2.5</code> and <code>3.5</code>, because it contains one profile. For now it may make most sense for these geometry operations to be kept independent of the object, especially since creating the vectors from a raw <code>data.frame</code> is so “cheap.”</p>
+</div>
+<div id="soilprofiles.jl" class="section level3">
+<h3><a href="https://github.com/brownag/SoilProfiles.jl"><em>SoilProfiles.jl</em></a></h3>
+<p><em>SoilProfiles.jl</em> is a <a href="https://julialang.org/">Julia</a> package for representing soil profile information using the “site-layer” model. In Julia, I am using the <em>DataFrames.jl</em> package instead of <strong>R</strong> <em>data.frame</em> objects, but trying to emulate and build on knowledge I have gained from working on the <strong>R</strong> SoilProfileCollection object.</p>
+<p>This is my first foray into making a package for the up-and-coming Julia language. Julia is a modern language for scientific computing. It was designed from the outset to be high performance, to be able to compile to native code on multiple platforms etc. There are many great ideas being expressed in this powerful language. <strong>R</strong> users may find Julia’s dynamic typing and support for interactive use very appealing, further, users of S4 objects in <strong>R</strong> may appreciate that Julia supports multiple dispatch out-of-the-box.</p>
+<p>Initially, I have translated the key vector operations required for maintaining state between the site and layer components of the object. Some of the limitations of the <strong>R</strong> <em>SoilProfileCollection</em> have been expressly avoided from the outset, such as an inability to represent horizon-less sites, etc.</p>
+<p>In the future, I will consider further diverging from the <em>SoilProfileCollection</em> concept and topology checks – possibly moving to an alternate representations of depth and geometry. One fun idea I would like to explore is integrating the Julia <a href="https://github.com/JuliaPhysics/Measurements.jl">Measurements</a> package in all soil depth-based values by default. Then, <em>SoilProfiles</em>-specific functions would be designed around the paradigm of uncertainty and error-propagation from fundamental physical, geometric measurements to derived analyte values, evaluation criteria etc.</p>
+<p>Along with my first foray into Julia, here is my first time knitting Julia code + output in a R markdown document.</p>
+<pre class="julia"><code>using SoilProfiles
+using DataFrames
+# 6 sites with 3 profiles of layer data
+s = DataFrame(pid = 1:6, elev = 100:105)</code></pre>
+<pre><code>## 6×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 1     │ 100   │
+## │ 2   │ 2     │ 101   │
+## │ 3   │ 3     │ 102   │
+## │ 4   │ 4     │ 103   │
+## │ 5   │ 5     │ 104   │
+## │ 6   │ 6     │ 105   │</code></pre>
+<pre class="julia"><code>l = DataFrame(pid = [1,1,1,1,1,2,2,2,2,2,3,3,3,3,3],
+              top = [0,10,20,30,40,0,5,10,15,20,0,20,40,60,80],
+              bot = [10,20,30,40,50,5,10,15,20,25,20,40,60,80,100])</code></pre>
+<pre><code>## 15×3 DataFrame
+## │ Row │ pid   │ top   │ bot   │
+## │     │ Int64 │ Int64 │ Int64 │
+## ├─────┼───────┼───────┼───────┤
+## │ 1   │ 1     │ 0     │ 10    │
+## │ 2   │ 1     │ 10    │ 20    │
+## │ 3   │ 1     │ 20    │ 30    │
+## │ 4   │ 1     │ 30    │ 40    │
+## │ 5   │ 1     │ 40    │ 50    │
+## │ 6   │ 2     │ 0     │ 5     │
+## │ 7   │ 2     │ 5     │ 10    │
+## │ 8   │ 2     │ 10    │ 15    │
+## │ 9   │ 2     │ 15    │ 20    │
+## │ 10  │ 2     │ 20    │ 25    │
+## │ 11  │ 3     │ 0     │ 20    │
+## │ 12  │ 3     │ 20    │ 40    │
+## │ 13  │ 3     │ 40    │ 60    │
+## │ 14  │ 3     │ 60    │ 80    │
+## │ 15  │ 3     │ 80    │ 100   │</code></pre>
+<pre class="julia"><code># construct a SoilProfile from DataFrames
+spc = SoilProfile(&quot;pid&quot;, s, l)</code></pre>
+<pre><code>## Profile ID: pid; # of Profiles: 6
+## Site data:
+## 6×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 1     │ 100   │
+## │ 2   │ 2     │ 101   │
+## │ 3   │ 3     │ 102   │
+## │ 4   │ 4     │ 103   │
+## │ 5   │ 5     │ 104   │
+## │ 6   │ 6     │ 105   │
+## ---
+## Layer data:
+## 15×3 DataFrame
+## │ Row │ pid   │ top   │ bot   │
+## │     │ Int64 │ Int64 │ Int64 │
+## ├─────┼───────┼───────┼───────┤
+## │ 1   │ 1     │ 0     │ 10    │
+## │ 2   │ 1     │ 10    │ 20    │
+## │ 3   │ 1     │ 20    │ 30    │
+## │ 4   │ 1     │ 30    │ 40    │
+## │ 5   │ 1     │ 40    │ 50    │
+## │ 6   │ 2     │ 0     │ 5     │
+## │ 7   │ 2     │ 5     │ 10    │
+## │ 8   │ 2     │ 10    │ 15    │
+## │ 9   │ 2     │ 15    │ 20    │
+## │ 10  │ 2     │ 20    │ 25    │
+## │ 11  │ 3     │ 0     │ 20    │
+## │ 12  │ 3     │ 20    │ 40    │
+## │ 13  │ 3     │ 40    │ 60    │
+## │ 14  │ 3     │ 60    │ 80    │
+## │ 15  │ 3     │ 80    │ 100   │</code></pre>
+<pre class="julia"><code># empty SPC
+show(SoilProfile())</code></pre>
+<pre><code>## Profile ID: pid; # of Profiles: 0
+## Site data:
+## 0×1 DataFrame
+## 
+## ---
+## Layer data:
+## 0×3 DataFrame</code></pre>
+<pre class="julia"><code># site and layer extraction
+res = spc[2:6, 2:4]</code></pre>
+<pre><code>## Profile ID: pid; # of Profiles: 5
+## Site data:
+## 5×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 2     │ 101   │
+## │ 2   │ 3     │ 102   │
+## │ 3   │ 4     │ 103   │
+## │ 4   │ 5     │ 104   │
+## │ 5   │ 6     │ 105   │
+## ---
+## Layer data:
+## 6×3 DataFrame
+## │ Row │ pid   │ top   │ bot   │
+## │     │ Int64 │ Int64 │ Int64 │
+## ├─────┼───────┼───────┼───────┤
+## │ 1   │ 2     │ 5     │ 10    │
+## │ 2   │ 2     │ 10    │ 15    │
+## │ 3   │ 2     │ 15    │ 20    │
+## │ 4   │ 3     │ 20    │ 40    │
+## │ 5   │ 3     │ 40    │ 60    │
+## │ 6   │ 3     │ 60    │ 80    │</code></pre>
+<pre class="julia"><code># all layers have a site
+isValid(res)</code></pre>
+<pre><code>## true</code></pre>
+<pre class="julia"><code># but not all sites have layers [4,5,6]
+sitesWithoutLayers(res)</code></pre>
+<pre><code>## 3-element Array{Int64,1}:
+##  4
+##  5
+##  6</code></pre>
+<pre class="julia"><code># iterate using for i in SoilProfile
+for i in spc
+ show(i)
+end</code></pre>
+<pre><code>## Profile ID: pid; # of Profiles: 1
+## Site data:
+## 1×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 1     │ 100   │
+## ---
+## Layer data:
+## 5×3 DataFrame
+## │ Row │ pid   │ top   │ bot   │
+## │     │ Int64 │ Int64 │ Int64 │
+## ├─────┼───────┼───────┼───────┤
+## │ 1   │ 1     │ 0     │ 10    │
+## │ 2   │ 1     │ 10    │ 20    │
+## │ 3   │ 1     │ 20    │ 30    │
+## │ 4   │ 1     │ 30    │ 40    │
+## │ 5   │ 1     │ 40    │ 50    │
+## Profile ID: pid; # of Profiles: 1
+## Site data:
+## 1×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 2     │ 101   │
+## ---
+## Layer data:
+## 5×3 DataFrame
+## │ Row │ pid   │ top   │ bot   │
+## │     │ Int64 │ Int64 │ Int64 │
+## ├─────┼───────┼───────┼───────┤
+## │ 1   │ 2     │ 0     │ 5     │
+## │ 2   │ 2     │ 5     │ 10    │
+## │ 3   │ 2     │ 10    │ 15    │
+## │ 4   │ 2     │ 15    │ 20    │
+## │ 5   │ 2     │ 20    │ 25    │
+## Profile ID: pid; # of Profiles: 1
+## Site data:
+## 1×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 3     │ 102   │
+## ---
+## Layer data:
+## 5×3 DataFrame
+## │ Row │ pid   │ top   │ bot   │
+## │     │ Int64 │ Int64 │ Int64 │
+## ├─────┼───────┼───────┼───────┤
+## │ 1   │ 3     │ 0     │ 20    │
+## │ 2   │ 3     │ 20    │ 40    │
+## │ 3   │ 3     │ 40    │ 60    │
+## │ 4   │ 3     │ 60    │ 80    │
+## │ 5   │ 3     │ 80    │ 100   │
+## Profile ID: pid; # of Profiles: 1
+## Site data:
+## 1×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 4     │ 103   │
+## ---
+## Layer data:
+## 0×3 DataFrame
+## 
+## Profile ID: pid; # of Profiles: 1
+## Site data:
+## 1×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 5     │ 104   │
+## ---
+## Layer data:
+## 0×3 DataFrame
+## 
+## Profile ID: pid; # of Profiles: 1
+## Site data:
+## 1×2 DataFrame
+## │ Row │ pid   │ elev  │
+## │     │ Int64 │ Int64 │
+## ├─────┼───────┼───────┤
+## │ 1   │ 6     │ 105   │
+## ---
+## Layer data:
+## 0×3 DataFrame</code></pre>
+<pre class="julia"><code># or use foreach(::Function, ::SoilProfile)
+foreach(show, spc);</code></pre>
+</div>

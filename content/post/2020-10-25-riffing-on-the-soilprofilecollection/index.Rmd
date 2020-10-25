@@ -1,0 +1,187 @@
+---
+title: Riffing on the SoilProfileCollection
+author: Andrew G. Brown
+date: '2020-10-25'
+slug: riffing-on-the-soilprofilecollection
+categories:
+  - aqp
+  - SoilProfileCollection
+  - R
+  - Julia
+  - vctrs
+  - DataFrames
+tags: [demonstrations]
+---
+
+Recently I developed two different riffs on the motif of the _aqp_ _SoilProfileCollection_... Soil profiles are essentially cross-sections for a point, line or area on the land surface where distinct "layers" are defined by a top and bottom depth measurement. There is generally a many:one relationship between layers observed within a soil profile and the site-level information that identifies or summarizes that profile. 
+
+### [_soilvctrs_](https://github.com/brownag/soilvctrs)
+
+_soilvctrs_ is an experimental **R** package to abstract geometric operations on stratified environmental data such as soil profile descriptions. Under the hood, _soilvctrs_ uses _vctrs_ for managing S3 class representations and data in an efficient vector based format. The primary goal of this package is to demonstrate concise soil-themed classes that “just work” with _tidyverse_ principles. Since _dplyr_ 1.0.0, _vctrs_ is a main workhorse package in the _tidyverse_ metapackage "ecosystem."
+
+The current _soilvctrs_ implementation represents parts of soil descriptions as S3 `vctrs::rcrd` objects: `soil_layer` and `soil_profile`.
+
+The beauty of record-style vectors is that despite supporting arbitrary hierarchical complexity they are able to be manipulated like any vector; notably: added as non-atomic columns in `tibble` and `data.frame` objects. `soil_profile` instances contain a `vctrs::list_of` `soil_layer` in accessible in `$profile` with length zero or more. The `soil_layer` and `soil_profile` are comprised of vector "fields" of length equal to number of horizons (in a profile) or number of profiles. `geom` fields are defined at both profile and layer levels. 
+
+What has changed about _soilvctrs_ most recently is that the geometry vectors that we were using from the _geovctrs_ package by [paleolimbot](https://github.com/paleolimbot) have been moved to the _wk_ package. Some of the code in _soilvctrs_ needs to be re-factored, but the changes are very minor. I have not yet published changes because I am re-evaluating certain structural aspects of the _soilvctrs_ model; such as the `vctrs::list_of` for layers. While _cool_, it poses some limitations with larger data sets. 
+
+Use of nested record objects containing geometry fields and the ability to directly manipulate geometric elements _outside_ of a graphics device has exciting (still theoretical) implications for interactive profile plots, 2-dimensional profile descriptions and new algorithm design. In the former cases -- graphics or summaries involving a small number of profiles -- performance for large collections should not be a major concern. 
+
+Here is a quick demonstration of incorporating _wk_ vectors for geometric and graphical operations. I use the _SoilProfileCollection_ `loafercreek` from the _soilDB_ package for source data. I demonstrate a couple simple vector operations and allude to how they can be used for interactive/dynamic profile plots.
+
+```{r}
+# get these off github
+# remotes::install_github(c('paleolimbot/wk',
+#                           'ncss-tech/aqp', 
+#                           'ncss-tech/soilDB'))
+
+library(vctrs)
+library(bench)
+library(wk)
+library(aqp, warn.conflicts = FALSE)
+library(soilDB)
+
+# get loafercreek data from soilDB (only thing we are using from there)
+data(loafercreek, package='soilDB')
+
+# add the wk_xy to the site table as a column
+loafercreek_xy <- as_xy(site(loafercreek)[,c('x','y')])
+site(loafercreek)$wk_pnt <- loafercreek_xy
+
+# make a rectangle for each horizons -- using no lists or iterations [fast]
+make_hz_wk_rct <- function(p) {
+  h <- horizons(p)
+  hzd <- horizonDepths(p)
+  i <- as.integer(as.factor(h[[idname(p)]]))
+  rct_df <- data.frame(xmin = i - 0.5,
+                       ymin = -h[[hzd[1]]], # horizon top depth is -Z (Y)
+                       xmax = i + 0.5,
+                       ymax = -h[[hzd[2]]])
+  return(as_rct(rct_df))
+}
+
+# add <wk_rct> to the horizon table [fast]
+bench_time(loafercreek$wk_rct_hz <- make_hz_wk_rct(loafercreek))
+head(horizons(loafercreek)[,c("phiid", "wk_rct_hz")])
+
+# aqp plot method [fancy, many options]
+bench_time(plot(loafercreek[5:10,], axis.line.offset = -0.5))
+
+# geometric vectors have basic plot methods
+bench_time(plot(loafercreek$wk_pnt))
+
+# all loafercreek horizon rcts
+bench_time(plot(loafercreek$wk_rct_hz, col = loafercreek$soil_color))
+
+# a few profiles of loafercreek horizon geometry
+plot(loafercreek[5:10,]$wk_rct_hz, col = loafercreek$soil_color)
+
+# basic width-scaling function for horizon wk_rct plots [fast]
+# assumes 1 profile = 1 unit in width (X) dimension
+scale_rct_width <- function(x, fct = 0.5) {
+  i <- 1:length(x)
+  x <- unclass(x)
+  mid <- (x$xmin + x$xmax) / 2
+  x$xmin <- mid - 0.5*fct
+  x$xmax <- mid + 0.5*fct
+  new_wk_rct(x)
+}
+
+# scale a subset
+scl.loaf <- loafercreek[5:10,]
+bench_time(scl.loaf$wk_rct_hz <- scale_rct_width(scl.loaf$wk_rct_hz))
+
+# first 10 loafercreek horizon geometry [now less cluttered]
+plot(scl.loaf$wk_rct_hz, col = loafercreek[5:10,]$soil_color)
+
+pad_rct <- function(x, xpad = 0, ypad = 0) {
+  i <- 1:length(x)
+  x <- unclass(x)
+  # NB: negative Y == depth
+  x$xmin <- x$xmin - xpad
+  x$ymin <- x$ymin + ypad
+  x$xmax <- x$xmax + xpad
+  x$ymax <- x$ymax - ypad
+  new_wk_rct(x)
+}
+
+combine_rct <- function(x, xpad = 0, ypad = 0) {
+  i <- 1:length(x)
+  x <- unclass(x)
+  # NB: negative Y == depth
+  x$xmin <- min(x$xmin)
+  x$ymin <- -min(-x$ymin)
+  x$xmax <- max(x$xmax)
+  x$ymax <- -max(-x$ymax)
+  new_wk_rct(x)
+}
+
+# "highlight" #6 profile's 4th horizon by "combining" rct geometry and over-plotting
+plot(scl.loaf$wk_rct_hz, col = scl.loaf$soil_color)
+
+# draw border
+border_p <- pad_rct(combine_rct(scale_rct_width(loafercreek[6,]$wk_rct_hz)), 
+                    xpad = 0.1, ypad=5)
+plot(border_p, add = T, lwd=2)
+
+# highlight horizon
+highlight_hz <- scale_rct_width(loafercreek[6,4]$wk_rct_hz)
+plot(pad_rct(highlight_hz, xpad = 0.05, ypad=2.5), 
+     add = T, col = rgb(1,1,0,0.666))
+
+# redraw lines
+plot(scl.loaf$wk_rct_hz, add = T)
+
+# overplotting on aqp::plotSPC base requires inversion of the Y axis
+invert_y_rct <- function(x) {
+  i <- 1:length(x)
+  x <- unclass(x)
+  # NB: negative Y == depth
+  x$ymin <- -x$ymin
+  x$ymax <- -x$ymax
+  new_wk_rct(x)
+}
+
+plotSPC(loafercreek[1:4,])
+plot(invert_y_rct(scale_rct_width(loafercreek[3,]$wk_rct_hz)), add = T, col=rgb(1,1,0,0.111))
+```
+
+Note: if this style of geometry were to be  incorporated in the _SoilProfileCollection_ the constructor would probably need to rebuild geometry (x axis) on `[` extraction, complicating the "simple" indexing above where rectangles are handled independently of the object. That is `loafercreek[3,]` would have `xmin=0.5`, `xmax=1.5`, not `2.5` and `3.5`, because it contains one profile. For now it may make most sense for these geometry operations to be kept independent of the object, especially since creating the vectors from a raw `data.frame` is so "cheap."
+
+### [_SoilProfiles.jl_](https://github.com/brownag/SoilProfiles.jl)
+
+_SoilProfiles.jl_ is a [Julia](https://julialang.org/) package for representing soil profile information using the "site-layer" model. In Julia, I am using the _DataFrames.jl_ package instead of **R** _data.frame_ objects, but trying to emulate and build on knowledge I have gained from working on the **R** SoilProfileCollection object.
+
+This is my first foray into making a package for the up-and-coming Julia language. Julia is a modern language for scientific computing. It was designed from the outset to be high performance, to be able to compile to native code on multiple platforms etc. There are many great ideas being expressed in this powerful language. **R** users may find Julia's dynamic typing and support for interactive use very appealing, further, users of S4 objects in **R** may appreciate that Julia supports multiple dispatch out-of-the-box.
+
+Initially, I have translated the key vector operations required for maintaining state between the site and layer components of the object. Some of the limitations of the **R** _SoilProfileCollection_ have been expressly avoided from the outset, such as an inability to represent horizon-less sites, etc. 
+
+In the future, I will consider further diverging from the _SoilProfileCollection_ concept and topology checks -- possibly moving to an alternate representations of depth and geometry. One fun idea I would like to explore is integrating the Julia [Measurements](https://github.com/JuliaPhysics/Measurements.jl) package in all soil depth-based values by default. Then, _SoilProfiles_-specific functions would be designed around the paradigm of uncertainty and error-propagation from fundamental physical, geometric measurements to derived analyte values, evaluation criteria etc.
+
+Along with my first foray into Julia, here is my first time knitting Julia code + output in a R markdown document.
+
+```{julia}
+using SoilProfiles
+using DataFrames
+# 6 sites with 3 profiles of layer data
+s = DataFrame(pid = 1:6, elev = 100:105)
+l = DataFrame(pid = [1,1,1,1,1,2,2,2,2,2,3,3,3,3,3],
+              top = [0,10,20,30,40,0,5,10,15,20,0,20,40,60,80],
+              bot = [10,20,30,40,50,5,10,15,20,25,20,40,60,80,100])
+# construct a SoilProfile from DataFrames
+spc = SoilProfile("pid", s, l)
+# empty SPC
+show(SoilProfile())
+# site and layer extraction
+res = spc[2:6, 2:4]
+# all layers have a site
+isValid(res)
+# but not all sites have layers [4,5,6]
+sitesWithoutLayers(res)
+# iterate using for i in SoilProfile
+for i in spc
+ show(i)
+end
+# or use foreach(::Function, ::SoilProfile)
+foreach(show, spc);
+```

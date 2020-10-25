@@ -4,7 +4,7 @@ title = "humus.rocks - soil is life on the rocks"
 theme = "hugo-xmin-brownag"
 googleAnalytics = ""
 disqusShortname = ""
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"]
 footnotereturnlinkcontents = "↩"
 
 [permalinks]
