@@ -13,15 +13,18 @@ directories:
   - $HOME/bin
 
 script:
-- wget https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5-latest-linux-x86_64.tar.gz
-- tar -xzf julia-1.5-latest-linux-x86_64.tar.gz
-- cp -r "$(find "." -maxdepth 2 -name "julia*" -type d | head -n 1)" "$HOME/julia"
-- export PATH="$HOME/julia/bin:$PATH"
-- export R_LD_LIBRARY_PATH="$(R RHOME)/lib:$HOME/julia/lib/julia"
-- Rscript -e 'install.packages(c("devtools","blogdown","JuliaCall","aqp","soilDB","sharpshootR"))'
-- Rscript -e 'devtools::install_github(c("ncss-tech/aqp", "ncss-tech/soilDB", "ncss-tech/sharpshootR"), dependencies=FALSE)'
-- Rscript -e 'blogdown::install_hugo()'
-- Rscript -e 'blogdown::build_site()'
+ - wget https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5-latest-linux-x86_64.tar.gz
+ - tar -xzf julia-1.5-latest-linux-x86_64.tar.gz
+ - cp -r "$(find "." -maxdepth 2 -name "julia*" -type d | head -n 1)" "$HOME/julia"
+ - export PATH="$HOME/julia/bin:$PATH"
+ - export R_LD_LIBRARY_PATH="$(R RHOME)/lib:$HOME/julia/lib/julia"
+ - Rscript -e 'install.packages(c("devtools","blogdown","JuliaCall","aqp","soilDB","sharpshootR"))'
+ - Rscript -e 'devtools::install_github(c("ncss-tech/aqp", "ncss-tech/soilDB", "ncss-tech/sharpshootR"), dependencies=FALSE)'
+ - wget https://github.com/gohugoio/hugo/releases/download/v0.76.5/hugo_0.76.5_Linux-64bit.tar.gz
+ - tar -xzf hugo_0.76.5_Linux-64bit.tar.gz
+ - cp -r "$(find "." -maxdepth 2 -name "hugo*" -type d | head -n 1)" "$HOME/hugo"
+ - export PATH="$HOME/hugo:$PATH"
+ - hugo
 
 deploy:
   provider: pages
