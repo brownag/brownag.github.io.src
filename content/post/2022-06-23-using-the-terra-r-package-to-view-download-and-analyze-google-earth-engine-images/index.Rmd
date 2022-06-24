@@ -1,0 +1,152 @@
+---
+title: Using the terra R package to view, download and analyze Google Earth Engine
+  Images
+author: Andrew Brown
+date: '2022-06-23'
+slug: using-the-terra-r-package-to-view-download-and-analyze-google-earth-engine-images
+categories:
+  - terra
+  - R
+  - GDAL
+  - Google Earth Engine
+tags: 
+  - API
+---
+
+Is it possible to use the GDAL "EEDAI" driver (Google Earth Engine Data API Image; https://gdal.org/drivers/raster/eedai.html) via the `terra` R package to create a `SpatRaster` from a Google Earth Engine asset? 
+
+One might ask: why bother trying to get data out of Earth Engine? Well, in order to use data in non-proprietary workflows, perform comparisons to non-public datasets, or preserve various products for reproducibility or historic value, we should want to have (at least subsets of) Earth Engine Assets archived as files on our own servers.
+
+Since `terra` uses GDAL API internally, in principle it _should_ be possible to source raster datasets _directly from Earth Engine_ via the REST API. No reticulate/Python Earth Engine API or Javascript required.
+
+While I have become familiar with the popular `rgee` package and Python packages like `ee` and `geedim`, I find it cumbersome to use the Python based tooling from R. Some folks with significant IT controls on their computer struggle getting Python environments configured and suitable binary dependencies (i.e. GDAL) installed.
+
+While setting up a local python instance can be a pain, it works fine. I find it even more cumbersome to develop solutions _within_ Google Earth Engine. That said, it really works, and I have seen the powerful tools that people have been able to develop. I am impressed and interested in providing additional ways on interfacing with the source data and data products. Generally with Earth Engine data in R I am not interested in downloading the _whole_ dataset i.e. for the entire globe or continental United States, but rather making larger scale comparisons of areas of interest to my local projects,  use in fitting local models or combined with other local data.
+
+I really enjoy using the interfaces to raster and vector data provided via the `terra` R package, so I wanted to see if I could get `terra` and Earth Engine Image assets to work more or less seamlessly. Since `terra` takes a "lazy" approach to loading raster data into memory, the `SpatRaster` object provides a convenient abstraction for (possibly multi-band) Earth Engine Image assets.
+
+The key "issue" for me was authenticating with the Earth Engine API... the documentation was there for the GDAL driver, and has been since GDAL 2.x, and therefore in principle we should be able to make it work with `terra`. If not, perhaps we would be able to make some suggestions to improve the package.
+
+To create a `SpatRaster` from an existing source path/URL with `terra` we call `rast(<character>)` with a Google Earth Engine asset as our source. To denote the Earth Engine asset we prefix the path with "EEDAI:", which explicitly indicates the Google Earth Engine Data API driver be used.
+
+```{r, include=FALSE}
+Sys.setenv(GOOGLE_APPLICATION_CREDENTIALS="/home/andrew/Downloads/valid-gizmo-126108-7a2221edc836.json")
+```
+
+```r
+terra::rast("EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG", opts ='--config ...')
+#> Error: [rast] cannot open file: EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG
+#> In addition: Warning message:
+#> Missing EEDA_BEARER, EEDA_BEARER_FILE or GOOGLE_APPLICATION_CREDENTIALS or EEDA_PRIVATE_KEY/EEDA_PRIVATE_KEY_FILE + EEDA_CLIENT_EMAIL config option (GDAL error 1) 
+```
+
+OK, so at least it recognizes Earth Engine as a possible data interface. How can we find the paths to assets we want? And how do we get "Google Application Credentials"? 
+
+**Reading the instructions at the head of the Google Earth Engine Quickstart (https://developers.google.com/earth-engine/reference/Quickstart), we find several ways to identify public assets, as well as example paths which I will use in this post. We will also need a ["service account"](https://cloud.google.com/iam/docs/creating-managing-service-accounts) registered for use with Earth Engine. A service account is different from your "main" Google Account and is associated with a specific Google Cloud project**
+
+`Sys.setenv()` allows relevant client connection parameters to be set. We need to provide the client email and private key to authenticate with the Earth Engine REST API. These data can be conveniently stored in plain-text in a JSON file. The private key provides access to the Earth Engine service on your behalf, so you should keep the contents of the file private.
+
+Passing GOOGLE_APPLICATION_CREDENTIALS config via `opts="--config GOOGLE APPLICATION_CREDENTIALS ..."` argument to `rast()` has same effect as `Sys.setenv(GOOGLE_APPLICATION_CREDENTIALS=...)`. 
+
+When the configuration options are specified the driver recognizes our credentials, but we get a 403 error "Permission Denied" with the message "Not signed up for Earth Engine or project is not registered. Visit https://earthengine.google.com/signup/"
+
+```r
+terra::rast("EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG", opts ='--config GOOGLE_APPLICATION_CREDENTIALS /home/andrew/valid-gizmo-****-****.json')
+#> Error: [rast] cannot open file: EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG
+#> In addition: Warning messages:
+#> 1: HTTP error code : 403 (GDAL error 1) 
+#> 2: HTTP error code : 403: {
+#>   "error": {
+#>     "code": 403,
+#>     "message": "Not signed up for Earth Engine or project is not registered. Visit https://earthengine.google.com/signup/",
+#>     "status": "PERMISSION_DENIED"
+#>   }
+#> }
+#>  (GDAL error 1) 
+```
+Still an error, but a _new_ error is progress!
+
+## Setting up _GOOGLE_APPLICATION_CREDENTIALS_
+
+1. Go to <https://console.cloud.google.com/iam-admin/serviceaccounts/> and add a key to the a new Google Cloud service account in a Google Cloud Project. Service accounts are associated with specific Google Cloud "projects." Use an existing project (if relevant) or create a new one. 
+
+2. From the project service manager menu, select your new service account '...' menu and select _Manage Keys..._ to generate a private key in JSON format. Save the file somewhere secure.
+
+3. If needed, use [this page](<https://signup.earthengine.google.com/#!/service_accounts>) to register your service account email for use with the Earth Engine API under your main Google account.
+
+These steps can also be done via the Google Cloud SDK / `gcloud` command-line tool.
+
+With your credentials set up, the above command should work, and you will get a SpatRaster with the Google Earth Engine asset as the source!
+
+```r
+terra::rast("EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG", opts ='--config GOOGLE_APPLICATION_CREDENTIALS="/home/andrew/valid-gizmo-****-de2525a7302d.json")
+#> Warning: [rast] skipped sub-datasets (see 'desc(sds=TRUE)'):
+#> B2,B3,B4,B8,QA10, B5,B6,B7,B8A,B11,B12,QA20
+#> class       : SpatRaster 
+#> dimensions  : 1830, 1830, 4  (nrow, ncol, nlyr)
+#> resolution  : 60, 60  (x, y)
+#> extent      : 499980, 609780, 4090200, 4200000  (xmin, xmax, ymin, ymax)
+#> coord. ref. : WGS 84 / UTM zone 10N (EPSG:32610) 
+#> source      : 20170430T190351_20170430T190351_T10SEG:B1,B9,B10,QA60 
+#> names       : B1,B9,B10,QA60_1, B1,B9,B10,QA60_2, B1,B9,B10,QA60_3, B1,B9,B10,QA60_4
+```
+
+No errors, a valid SpatRaster with 4 layers. But we get a warning now. This particular asset contains the Sentinel-2 bands for a particular tile in April 2017. We can use {terra} `describe(..., sds=TRUE)` (a wrapper around the `gdalinfo` command-line tool) to find out information about the sub-datasets.
+
+```r
+terra::describe("EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG", sds = TRUE)
+#>   id
+#> 1  1
+#> 2  2
+#> 3  3
+#>                                                                                                                      name
+#> 1            EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG:B1,B9,B10,QA60
+#> 2          EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG:B2,B3,B4,B8,QA10
+#> 3 EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG:B5,B6,B7,B8A,B11,B12,QA20
+#>                         var
+#> 1            B1,B9,B10,QA60
+#> 2          B2,B3,B4,B8,QA10
+#> 3 B5,B6,B7,B8A,B11,B12,QA20
+#>                                                                                                                         desc
+#> 1            Bands B1,B9,B10,QA60 of projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG
+#> 2          Bands B2,B3,B4,B8,QA10 of projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG
+#> 3 Bands B5,B6,B7,B8A,B11,B12,QA20 of projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG
+#>    nrow  ncol nlyr
+#> 1  1830  1830    4
+#> 2 10980 10980    5
+#> 3  5490  5490    7
+```
+
+We can control which sub-dataset we want to return by specifying the `subds` argument to `rast()`. 
+
+So, to get the 3rd sub-dataset (Bands B5,B6,B7,B8A,B11,B12,QA20) we specify `subds = 3` explicitly.
+
+```r
+terra::rast("EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG", subds=3)
+#> class       : SpatRaster 
+#> dimensions  : 5490, 5490, 7  (nrow, ncol, nlyr)
+#> resolution  : 20, 20  (x, y)
+#> extent      : 499980, 609780, 4090200, 4200000  (xmin, xmax, ymin, ymax)
+#> coord. ref. : WGS 84 / UTM zone 10N (EPSG:32610) 
+#> source      : 20170430T190351_20170430T190351_T10SEG:B5,B6,B7,B8A,B11,B12,QA20 
+#> names       : B1,B9~A60_1, B1,B9~A60_2, B1,B9~A60_3, B1,B9~A60_4, B1,B9~A60_5, B1,B9~A60_6, ...
+```
+
+Since the sub-datasets have varying resolution they cannot be combined in a single SpatRaster result without some warping. Each sub-dataset has a single Coordinate Reference System/resolution/extent.
+
+Since the values are not read from the source until they are needed, simple evaluations of the source metadata happen essentially instantaneously. We can then crop and/or project to a template of our choosing. Remember to save to local GeoTIFF file by specifying the `filename` argument! Whether saving to file or in-memory, this operation can take a little bit of time depending on the extent, number of layers, data type, and download speeds of data over the REST API. 
+
+```{r, message=FALSE}
+library(terra)
+r <- terra::rast("EEDAI:projects/earthengine-public/assets/COPERNICUS/S2/20170430T190351_20170430T190351_T10SEG", subds=3)
+r2 <- crop(r[[1:3]], ext(r) / 10, filename = "test.tif")
+plot(r2)
+```
+
+```{r, include=FALSE}
+unlink("test.tif")
+```
+
+So, that's pretty cool. We can access public Earth Engine assets, view and analyze them, and save as a portable GeoTIFF format using only the `terra` R package. Some assembly is required in terms of setting up private keys for accessing the service on the Google Cloud side of the setup, but this could essentialy be "set and forget" in one's environment variables or _.Rprofile_
+
+If you found this article interesting, you might also enjoy this article on [Cloud Optimized GeoTIFF (COG)-backed Google Earth Engine Assets] (https://developers.google.com/earth-engine/Earth_Engine_asset_from_cloud_geotiff)
